@@ -1,0 +1,226 @@
+body {font: 100%/1.4 Lucida Grande, Arial, Helvetica, sans-serif;
+	margin: 0;
+	padding: 0;
+	color: #000;
+	font-size:12px;
+}
+
+ul, ol, dl { 
+	padding: 0;
+	margin: 0;
+}
+
+h1, h2, h3, h4, h5, h6, p {
+	margin-top: 0;	 
+	padding-right: 15px;
+	padding-left: 15px; 
+}
+h1 {
+	font-size:20pt;
+}
+a img { 
+	border: none;
+}
+
+a:link {
+	color:#414958;
+	text-decoration: underline; 
+}
+a:visited {
+	color: #4E5869;
+	text-decoration: underline;
+}
+a:hover, a:active, a:focus { 
+	text-decoration: none;
+}
+
+.container {
+	width: 850px;
+	background: #FFF;
+	margin: 0 auto; 
+	overflow:hidden;
+	
+}
+
+.sidebar1 {
+	float: left;
+	width: 150px;
+	background: #93A5C4;
+	padding-bottom: 10px;
+	
+}
+.content {
+	padding: 10px;
+	width: 680px;
+	float: left;
+	overflow:hidden;
+	clear:right;
+	
+	
+}
+.sidebar2 {
+	float: left;
+	width: 25%;
+	background: #93A5C4;
+	padding: 10px 0;
+}
+.content ul, .content ol { 
+	padding: 0 15px 15px 40px; 
+}
+
+.content ul, .content ol { 
+	padding: 0 15px 15px 40px; 
+}
+
+
+.fltrt {  
+	float: right;
+	margin-left: 8px;
+}
+.fltlft { 
+	float: left;
+	margin-right: 8px;
+}
+.clearfloat { 
+	clear:both;
+	height:2px;
+	font-size: 1px;
+	line-height: 0px;
+}
+
+.header {
+	clear: both;
+	display: table;
+	width:100%;
+	overflow:hidden;
+}
+.tophead {
+	width:100%;
+	height:97px;
+	background-color:#CCF;
+	overflow:hidden;
+	clear:both;
+	border-radius:5px;
+	
+}
+
+#sitename {
+	clear: none;
+	float: left;
+	width: 300px;
+	
+}
+.searchtable {
+	vertical-align: middle;
+}
+
+#logindiv {
+	height:auto;
+	overflow:hidden;
+	padding:5px;
+	border: 1px solid #fff;
+	border-radius:5px;
+	float:right;
+	clear:right;
+	text-align: right;
+	margin:7px;
+	
+}
+
+.topsort {
+	background-color: #CCC;
+}
+
+#searchdiv {
+	
+	width:100%
+
+	min-width:780px;
+	display:inline;
+	overflow:hidden;
+	
+
+		
+}
+
+#search {
+	width:100%;
+	line-height: 23px;
+	border-radius:5px;
+	
+		
+}
+
+#forminline {
+	display:inline;
+	float:right;
+	clear:both;	
+}
+
+#searchinput: {
+	width:75%;	
+}
+
+
+#nav ul {
+	margin: 0; 
+    padding: 0; 
+    list-style: none; 
+    width: 150px; 
+	}
+	
+#nav ul li {
+	position: relative; 
+	list-style:none;
+}
+
+#nav li ul {
+	position: absolute; 
+    left: 149px; 
+    top: 0; 
+    display: none;
+}
+
+#nav ul li a{
+display: block; 
+    text-decoration: none; 
+    color: black; 
+    padding: 5px; 
+    border: 1px solid #ccc; 
+    border-bottom: 1px solid #fff;
+	
+	background-image: linear-gradient(bottom, rgb(179,201,219) 46%, rgb(216,230,230) 60%);
+background-image: -o-linear-gradient(bottom, rgb(179,201,219) 46%, rgb(216,230,230) 60%);
+background-image: -moz-linear-gradient(bottom, rgb(179,201,219) 46%, rgb(216,230,230) 60%);
+background-image: -webkit-linear-gradient(bottom, rgb(179,201,219) 46%, rgb(216,230,230) 60%);
+background-image: -ms-linear-gradient(bottom, rgb(179,201,219) 46%, rgb(216,230,230) 60%);
+
+background-image: -webkit-gradient(
+	linear,
+	left bottom,
+	left top,
+	color-stop(0.46, rgb(179,201,219)),
+	color-stop(0.6, rgb(216,230,230))
+);	
+	
+}
+
+
+#nav ul { 
+    margin: 0; 
+    padding: 0; 
+    list-style: none; 
+    width: 150px; 
+    border-bottom: 1px solid #fff; 
+    }
+#nav li:hover ul { display: block; }
+#nav li:hover ul, li.over ul {    
+    display: block;    
+         }
+
+</style>[if lte IE 7]>
+<style>
+.content { margin-right: -1px; } 
+ul.nav a { zoom: 1; }  
+</style>
+<![endif]</head>
