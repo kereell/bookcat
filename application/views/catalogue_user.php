@@ -38,15 +38,10 @@
    			</div>
 			<div class="sidebar1">
 				<div id="nav">
-					<ul>
-						<?php foreach($cats as $cat):?>
-			    		<li><a href="<?=base_url('catalogue?cat='.$cat->id)?>"><?=$cat->name?></a>
-			    		<ul><li><a>hjkhlkhjlkjhkl</a></li></ul></li>
-			    		<?php endforeach?>    
-					</ul>
+					<?=$categories?>
 				</div>
 			    <p>&nbsp;</p>
-			    <p>Это сайдбар. Здесь можно что-то написать</p>
+			    <p>Sidebar</p>
 			  	<!-- end .sidebar1 -->
 		  	</div>
 			<div class="content">
@@ -71,6 +66,6 @@
 				<!-- end .content -->
 			</div>
 		</div>	
-		<div id="footer">А это футер. Здесь тоже можно что-то написать.</div>
+		<div style="background-color: grey;" id="footer">Footer</div>
 	</body>
 </html>

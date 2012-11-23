@@ -2,6 +2,11 @@
 
 class Catalogue extends CI_Controller {
 
+	public $menu = array(
+			'items' => array(),
+			'parents' => array()
+			);
+	
 	public function __construct(){
 
 		parent::__construct();
@@ -10,9 +15,21 @@ class Catalogue extends CI_Controller {
 	
 	public function index()
 	{
+		$this->load->model('categories_model');
+		$this->load->library('categories');
 		
+		$cats = $this->categories_model->getCats();
+		
+		
+		foreach($cats as $cat){
+				
+			$this->menu['items'][$cat['id']] = $cat;
+			$this->menu['parents'][$cat['parent']][] = $cat['id'];
+				
+		}
+		
+		$data['categories'] = Categories::build(0, $this->menu);
 		$data['user'] = $this->session->userdata;
-		$data['cats'] = $this->catalogue_model->getAllCats();
 		
 		if(isset($_GET['cat']))
 		{
@@ -37,6 +54,14 @@ class Catalogue extends CI_Controller {
 		/** TPL LOAD  **/
 		$this->load->view('catalogue_user', $data);
 	
+	}
+	
+	public function test(){
+
+	//	header('Content-type: text/html; charset=utf8');
+		
+		
+		
 	}
 	
 }

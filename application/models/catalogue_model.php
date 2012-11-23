@@ -56,12 +56,4 @@ class Catalogue_model extends CI_Model{
 	
 	}
 	
-	public function getAllCats()
-	{
-		
-		$query = $this->db->get_where('bc_categories', array('parent' => 0,'active' => 1));
-		return $query->result();
-		
-	}
-	
 }
