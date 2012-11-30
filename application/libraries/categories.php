@@ -14,11 +14,11 @@ class Categories {
 			{
 				if(!isset($menu['parents'][$itemId]))
 				{
-					$html .= "<li><a href='?cat=".$menu['items'][$itemId]['id']."'>".$menu['items'][$itemId]['name']."</a></li> \n";
+					$html .= "<li><a href='".base_url('catalogue/books?cat='.$menu['items'][$itemId]['id'])."'>".$menu['items'][$itemId]['name']."</a></li> \n";
 				}
 				if(isset($menu['parents'][$itemId]))
 				{
-					$html .= "<li><a href='?cat=".$menu['items'][$itemId]['id']."'>".$menu['items'][$itemId]['name']."</a> \n";
+					$html .= "<li><a href='".base_url('catalogue/books?cat='.$menu['items'][$itemId]['id'])."'>".$menu['items'][$itemId]['name']."</a> \n";
 					$html .= self::build($itemId, $menu);
 					$html .= "</li> \n";
 				}

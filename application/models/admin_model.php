@@ -15,7 +15,10 @@ class Admin_model extends CI_Model {
 		
 		$query = $this->db->get();
 		
-		return $query->result();	
+		$res = array(
+				'count' => $query->num_rows(),
+				'result' => $query->result());
+		return $res;	
 	}
 	
 	public function insertCat($data)
@@ -38,9 +41,11 @@ class Admin_model extends CI_Model {
 		$this->db->select('*');
 		$this->db->from('bc_authors');
 		
-		$query = $this->db->get();
-		
-		return $query->result();
+		$query = $this->db->get('');
+		$res = array(
+				'count' => $query->num_rows(),
+				'result' => $query->result());
+		return $res;
 	}
 	
 	public function insertAuthor($data)
@@ -58,14 +63,15 @@ class Admin_model extends CI_Model {
 	
 	}
 	
-	public function getBookList()
+	public function getBookList($off,$pp)
 	{
-		$this->db->select('*');
-		$this->db->from('bc_books');
+		$count = $this->db->get('bc_books');
+		$query = $this->db->get('bc_books', $pp, $off);
 		
-		$query = $this->db->get();
-		
-		return $query->result();	
+		$res = array(
+				'count' => $count->num_rows(),
+				'result' => $query->result());
+		return $res;	
 	}
 	
 	public function insertBook($data)

@@ -35,6 +35,7 @@ a:hover, a:active, a:focus {
 }
 
 .container {
+	display:block;
 	width: 850px;
 	background: #FFF;
 	margin: 0 auto; 
@@ -50,37 +51,39 @@ a:hover, a:active, a:focus {
 	
 }
 .content {
+	display:block;
+	text-align:center;
 	padding: 10px;
 	width: 680px;
 	float: left;
-	overflow:hidden;
 	clear:right;
-	
+/* 	overflow-y:scroll; */ 
 	
 }
+
+.ajaxLoad {
+	display:none;
+	text-align: center;
+	/* margin: 0 auto; */
+	background:url("../img/ajaxLoadLong.gif") no-repeat;
+	
+}
+
 .sidebar2 {
 	float: left;
 	width: 25%;
 	background: #93A5C4;
 	padding: 10px 0;
 }
-.content ul, .content ol { 
-	padding: 0 15px 15px 40px; 
-}
 
 .content ul, .content ol { 
 	padding: 0 15px 15px 40px; 
 }
 
+.content ul, .content ol { 
+	padding: 0 15px 15px 40px; 
+}
 
-.fltrt {  
-	float: right;
-	margin-left: 8px;
-}
-.fltlft { 
-	float: left;
-	margin-right: 8px;
-}
 .clearfloat { 
 	clear:both;
 	height:2px;
@@ -94,14 +97,14 @@ a:hover, a:active, a:focus {
 	width:100%;
 	overflow:hidden;
 }
+
 .tophead {
 	width:100%;
 	height:97px;
 	background-color:#CCF;
 	overflow:hidden;
 	clear:both;
-	border-radius:5px;
-	
+	border-radius:5px;	
 }
 
 #sitename {
@@ -110,6 +113,7 @@ a:hover, a:active, a:focus {
 	width: 300px;
 	
 }
+
 .searchtable {
 	vertical-align: middle;
 }
@@ -133,13 +137,10 @@ a:hover, a:active, a:focus {
 
 #searchdiv {
 	
-	width:100%
-
+	width:100%;
 	min-width:780px;
 	display:inline;
 	overflow:hidden;
-	
-
 		
 }
 
@@ -147,7 +148,6 @@ a:hover, a:active, a:focus {
 	width:100%;
 	line-height: 23px;
 	border-radius:5px;
-	
 		
 }
 
@@ -182,7 +182,7 @@ a:hover, a:active, a:focus {
 }
 
 #nav ul li a{
-display: block; 
+	display: block; 
     text-decoration: none; 
     color: black; 
     padding: 5px; 
@@ -190,21 +190,28 @@ display: block;
     border-bottom: 1px solid #fff;
 	
 	background-image: linear-gradient(bottom, rgb(179,201,219) 46%, rgb(216,230,230) 60%);
-background-image: -o-linear-gradient(bottom, rgb(179,201,219) 46%, rgb(216,230,230) 60%);
-background-image: -moz-linear-gradient(bottom, rgb(179,201,219) 46%, rgb(216,230,230) 60%);
-background-image: -webkit-linear-gradient(bottom, rgb(179,201,219) 46%, rgb(216,230,230) 60%);
-background-image: -ms-linear-gradient(bottom, rgb(179,201,219) 46%, rgb(216,230,230) 60%);
-
-background-image: -webkit-gradient(
-	linear,
-	left bottom,
-	left top,
-	color-stop(0.46, rgb(179,201,219)),
-	color-stop(0.6, rgb(216,230,230))
-);	
+	background-image: -o-linear-gradient(bottom, rgb(179,201,219) 46%, rgb(216,230,230) 60%);
+	background-image: -moz-linear-gradient(bottom, rgb(179,201,219) 46%, rgb(216,230,230) 60%);
+	background-image: -webkit-linear-gradient(bottom, rgb(179,201,219) 46%, rgb(216,230,230) 60%);
+	background-image: -ms-linear-gradient(bottom, rgb(179,201,219) 46%, rgb(216,230,230) 60%);
+	background-image: -webkit-gradient(linear,left bottom,left top,color-stop(0.46, rgb(179,201,219)),color-stop(0.6, rgb(216,230,230)));	
 	
 }
 
+.paginator{
+	display:block;
+	margin:0 auto;
+	text-align: center;
+	font-size: medium;
+	
+}
+
+/* #books{
+	display: block;
+	height:100px;
+	width: 100%;
+	
+} */
 
 #nav ul { 
     margin: 0; 

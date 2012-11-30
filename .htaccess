@@ -2,6 +2,7 @@ RewriteEngine on
 
 RewriteBase /bookcat/
 
-RewriteCond $1 !^(index\.php|images|assets|robots\.txt)
+#RewriteCond %{DOCUMENT_ROOT} !-d
+RewriteCond $1 !^(index\.php|user_guide|assets|robots\.txt)
 
 RewriteRule ^(.*)$ index.php/$1 [L]

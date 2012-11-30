@@ -8,7 +8,7 @@ class Catalogue_model extends CI_Model{
 		
 	}
 	
-	public function getBooks()
+	public function getBooks($off, $pp)
 	{
 		
 		$this->db->select('t1.id, t1.title, t1.description, t1.id_author, t1.id_category, t1.rate, t1.img, t2.name AS author');
@@ -16,9 +16,13 @@ class Catalogue_model extends CI_Model{
 		$this->db->join('bc_authors AS t2', 't1.id_author = t2.id');
 		$this->db->where('t1.active = 1');
 		
-		$query = $this->db->get();
+		$query = $this->db->get('', $pp, $off);
+		$count = $this->db->get('bc_books');
 		
-		return $query->result();
+		$res = array(
+				'count' => $count->num_rows(),
+				'result' => $query->result());
+		return $res;	
 		
 	}
 	

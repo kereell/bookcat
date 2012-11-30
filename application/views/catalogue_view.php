@@ -2,7 +2,9 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 	<head>
 		<?=meta('Content-type', 'text/html; charset=utf-8', 'equiv')?>
-		<?=link_tag('assets/css/style.css')?>
+		<?=link_tag('assets/css/user.css')?>
+		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+		<script src="<?=base_url('assets/js/user.js')?>"></script>
 	</head>
 	<body>
 		<div class="container">
@@ -20,9 +22,9 @@
   					</form>
   				</div>
   				<?php else:?>
-  				<div id="sitename"><h1>Welcome <?=$user['name']?></h1></div>
+  				<div id="wellcome"><h1>Welcome <?=$user['name']?></h1></div>
   				<div id="sitename"><h1><a href="<?=base_url('admin')?>">Admin Area</a></h1></div>
-  				<div id="sitename"><h1><a href="<?=base_url('admin/logout')?>">Logout</a></h1></div>
+  				<div id="logout"><h1><a href="<?=base_url('admin/logout')?>">Logout</a></h1></div>
   				<?php endif?>
   			</div>
   			<div id="searchdiv"> 
@@ -37,33 +39,15 @@
 				</form>
    			</div>
 			<div class="sidebar1">
-				<div id="nav">
+				<div id="nav" class="nav">
 					<?=$categories?>
 				</div>
 			    <p>&nbsp;</p>
 			    <p>Sidebar</p>
 			  	<!-- end .sidebar1 -->
 		  	</div>
+		  	<div class="ajaxLoad">&nbsp;</div>
 			<div class="content">
-		    	<table width="100%" border="0" id="sort">
-					<tr class="topsort">
-						<td>Обложка&nbsp;</td>
-						<td>Название книги&nbsp;</td>
-						<td>Автор&nbsp;</td>
-						<td width="280px">Описание&nbsp;</td>
-						<td>Рейтинг</td>
-					</tr>
-					<?php foreach($books as $book):?>
-					<tr>
-						<td><?=img('assets/img/'.$book->img.'.jpg')?></td>
-					  	<td><?=$book->title?></td>
-					  	<td><?=$book->author?></td>
-						<td><?=$book->description?></td>
-						<td><?=$book->rate?></td>
-					</tr>
-					<?php endforeach?>
-				</table>	
-				<!-- end .content -->
 			</div>
 		</div>	
 		<div style="background-color: grey;" id="footer">Footer</div>
