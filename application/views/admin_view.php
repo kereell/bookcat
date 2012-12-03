@@ -11,7 +11,7 @@
 		<div class="container">
 			<div class="clearfloat"></div>
   				<div class="tophead">
-  			  		<div id="sitename"><h1><a href="<?=base_url('catalogue')?>">Book's Catalogue</a></h1></div>
+  			  		<div id="sitename"><h1><a href="<?=base_url('catalogue')?>">User side</a></h1></div>
   					<div id="welcome"><h1>Welcome <?=$user['name']?></h1></div>
   					<div id="logout"><h1><a href="<?=base_url('admin/logout')?>">Logout</a></h1></div>
                 <div id="menu">

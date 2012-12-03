@@ -28,11 +28,11 @@
   				<?php endif?>
   			</div>
   			<div id="searchdiv"> 
-  				<form action="<?=base_url('catalogue/search')?>" method="get" >
+  				<form action="<?=base_url('catalogue')?>" method="get" >
 					<table width="100%" border="0">
 						<tr>
 						    <td width="9%" align="right" class="searchtable"><label for="search" >поиск</label>&nbsp;</td>
-						    <td width="83%"><input type="text" name="q" id="search" value="<?=isset($_GET['q'])?$_GET['q']:''?>" /></td>
+						    <td width="83%"><input type="text" name="search" id="search" value="<?=isset($_GET['q'])?$_GET['q']:''?>" /></td>
 						    <td width="8%" align="left" class="searchtable"><input name="" type="submit" value="Найти" />&nbsp;</td>
 					  	</tr>
 					</table>
@@ -47,7 +47,9 @@
 			  	<!-- end .sidebar1 -->
 		  	</div>
 		  	<div class="ajaxLoad">&nbsp;</div>
+		  	<div class="breadcrumbs"><?=$breadcrumbs?></div>
 			<div class="content">
+			<?=$cont?>
 			</div>
 		</div>	
 		<div style="background-color: grey;" id="footer">Footer</div>

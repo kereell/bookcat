@@ -127,12 +127,12 @@ class Admin extends CI_Controller {
 		$config['num_links'] = $nlinks;
 		
 		$config['next_link'] = 'Next';
-		$config['next_tag_open'] = '<div class="next">';
-		$config['next_tag_close'] = '</div>';
-		
+		$config['next_tag_open'] = '<span class="next">&nbsp;';
+		$config['next_tag_close'] = '</span>';
+	
 		$config['prev_link'] = 'Previous';
-		$config['prev_tag_open'] = '<div class="previous">';
-		$config['prev_tag_close'] = '</div>';
+		$config['prev_tag_open'] = '<span class="prev">&nbsp;';
+		$config['prev_tag_close'] = '</span>';
 		
 		$this->pagination->initialize($config);
 		

@@ -198,6 +198,10 @@ a:hover, a:active, a:focus {
 	
 }
 
+.desc {
+	text-align: left;
+}
+
 .paginator{
 	display:block;
 	margin:0 auto;

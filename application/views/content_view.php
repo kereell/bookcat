@@ -11,8 +11,8 @@
 		<td><?=img('assets/img/'.$book->img.'.jpg')?></td>
 		<td><?=$book->title?></td>
 		<td><?=$book->author?></td>
-		<td><?=$book->description?></td>
-		<td><?=$book->rate?></td>
+		<td class="desc"><?=$book->description?></td>
+		<td>Художественная литература => Золотой Век</td>
 	</tr>
 	<?php endforeach?>
 </table>
