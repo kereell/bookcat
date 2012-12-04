@@ -3,6 +3,7 @@ body {font: 100%/1.4 Lucida Grande, Arial, Helvetica, sans-serif;
 	padding: 0;
 	color: #000;
 	font-size:12px;
+	
 }
 
 ul, ol, dl { 
@@ -100,7 +101,7 @@ a:hover, a:active, a:focus {
 
 .tophead {
 	width:100%;
-	height:97px;
+	height:103px;
 	background-color:#CCF;
 	overflow:hidden;
 	clear:both;
@@ -121,6 +122,7 @@ a:hover, a:active, a:focus {
 #logindiv {
 	height:auto;
 	overflow:hidden;
+	width:300px;
 	padding:5px;
 	border: 1px solid #fff;
 	border-radius:5px;
@@ -228,6 +230,35 @@ a:hover, a:active, a:focus {
 #nav li:hover ul, li.over ul {    
     display: block;    
          }
+		 
+		 
+#welcome  {
+	font-size: 19px;	
+	font-weight:bold;
+	color:#339;
+	text-align:center;
+}
+
+#adarea a {
+	font-size: 18px;	
+	font-weight:bold;
+}
+
+#logout  a {
+		
+	font-size: 18px;	
+	font-weight:bold;
+}
+
+.onebutton a {
+text-decoration: none;
+padding:4px;	
+}
+.centeralign  {
+text-align: center;
+margin-top:7px;	
+}
+
 
 </style>[if lte IE 7]>
 <style>

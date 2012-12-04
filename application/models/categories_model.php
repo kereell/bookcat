@@ -28,11 +28,7 @@ class Categories_model extends CI_Model {
 			$this->categories['parents'][$cat['parent']][] = $cat['id'];
 		}
 		
-/* 		echo '<pre>';
- 		print_r($this->categories);
- 		echo '</pre>';
- 		die;
- */		return $this->categories; 
+		return $this->categories; 
 		
 	}
 	

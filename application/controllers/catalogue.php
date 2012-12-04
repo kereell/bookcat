@@ -14,30 +14,11 @@ class Catalogue extends CI_Controller {
 	public function index()
 	{		
 		$data['user'] = $this->session->userdata;
-		
+		$data['title'] = 'Каталог';
 		$data['categories'] = $this->cats();
 		$data['cont'] = $this->books();	
 			
 		$this->load->view('catalogue_view', $data);
-	}
-		
-	
-	public function test(){
-
-		header('Content-type: text/html; charset=utf8');
-		
-		$arr = $this->cat_mdl->getCats();
-		
-		
-		$var = 5;
-		
-		echo '<pre>';
-//		print_r($tmp);
-		echo '</pre>';
-//		die;
-
-		//echo __METHOD__;
-		
 	}
 	
 	private function books()
@@ -48,9 +29,8 @@ class Catalogue extends CI_Controller {
 		$search = isset($_GET['search']) ? $_GET['search'] : NULL; 
 	
 		$list = $this->catalogue_model->getBooks($offset, PER_PAGE, $cat, $search);
-	
-		$data['breadcrumbs'] = $this->breadcrumbs($cat);
 		
+		$data['breadcrumbs'] = $this->breadcrumbs($cat);
 		$data['books'] = $list['result'];
 		$data['paginator'] = $this->_paginator('/catalogue/index/'.$cat, $list['count'], PER_PAGE);
 	
@@ -93,5 +73,23 @@ class Catalogue extends CI_Controller {
 	
 		return $this->pagination->create_links();
 	}
-		
+
+	public function test(){
+	
+		header('Content-type: text/html; charset=utf8');
+	
+		$arr = $this->cat_mdl->getCats();
+	
+	
+		$var = 5;
+	
+		echo '<pre>';
+		//		print_r($tmp);
+		echo '</pre>';
+		//		die;
+	
+		//echo __METHOD__;
+	
+	}
+	
 }
