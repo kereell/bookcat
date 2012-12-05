@@ -113,8 +113,9 @@ class Admin extends CI_Controller {
 	{
 		if(isset($_POST['sBtn']))
 		{
-		
-			$content =	print_r($_POST,1);
+			
+			$content = $this->model->editBook(1, $_POST);
+				
 		
 		} else {
 
@@ -126,13 +127,10 @@ class Admin extends CI_Controller {
 				/** TPL DATA **/
 			$data['book'] = $book;
 			$data['authors'] = $authors['result']; 
-			$data['cats'] = $cats['result'];
-			/* header('Content-type: text/html; charset=utf8');
-			$content =	print_r($data['authors'],1); */
-			
+			$data['cats'] = $cats['result'];			
 				
-			/** TPL LOAD **/
-		$content = $this->load->view('admin/layouts/booksAddEdit', $data, TRUE);
+				/** TPL LOAD **/
+			$content = $this->load->view('admin/layouts/booksAddEdit', $data, TRUE);
 		
 		}
 		

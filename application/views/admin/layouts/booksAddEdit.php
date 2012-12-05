@@ -4,6 +4,7 @@
         <div class="badWords"></div>
         <div class="jqmClose"></div> 
         <form class="addEditFrm" action="<?=base_url('admin/books?act=edit')?>" method="post">
+        <input type="hidden" name="id" id="id" value="<?=$book->id?>" />
             <div>
             	<span class="formelement">Название</span>
             	<input type="text" class="formfield" name="bookName" id="bookName" value="<?=$book->title?>" autocomplete="off" placeholder="Название" />
@@ -52,7 +53,7 @@
             </div>
             <div>
             	<span class="formelement"></span>
-            	<input type="text" class="formfield" id="" value="<?=$book->active?>" autocomplete="off" placeholder="......" />
+            	<input type="text" class="formfield" id="" value="" autocomplete="off" placeholder="......" />
             	<div class="error"></div>
             </div>
             <div id="wrbtn">
