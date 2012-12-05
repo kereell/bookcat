@@ -11,7 +11,7 @@
 		<div class="container">
 			
   			<div class="tophead">
-  				<div id="sitename"><h1><a href="<?=base_url('catalogue')?>">Book Catalogue</a></h1></div>
+  				<div id="sitename"><div id="wrapcenter"><h1><a href="<?=base_url('catalogue')?>">Book<br />Catalogue</a></h1></div></div>
  	 			<div id="logindiv">
 				<?php if(!isset($user['loggedIn'])):?>
   					<form action="<?=base_url('login')?>" method="post" >

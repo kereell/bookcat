@@ -44,7 +44,7 @@ class Catalogue extends CI_Controller {
 		$data['paginator'] = $paginator; 
 			
 			/** TPL LOAD **/
-		$this->load->view('catalogue_view', $data);
+		$this->load->view('user/catalogue_view', $data);
 	}
 	
 	
@@ -56,7 +56,7 @@ class Catalogue extends CI_Controller {
 		$data['books'] = $list['result'];
 			
 			/** TPL LOAD **/
-		$cont = $this->load->view('content_view', $data, true);
+		$cont = $this->load->view('user/layouts/content', $data, true);
 		
 		$res = array(
 				'content' => $cont,
@@ -73,14 +73,13 @@ class Catalogue extends CI_Controller {
 		$data['books'] = $list['result'];
 			
 			/** TPL LOAD **/
-		$cont = $this->load->view('content_view', $data, true);
+		$cont = $this->load->view('user/layouts/content', $data, true);
 		
 		$res = array(
 				'content' => $cont,
 				'total' => $list['count']);
 		
-		return $res;
-		
+		return $res;	
 	}
 	
 	private function searchBooks($offset, $search)
@@ -91,14 +90,13 @@ class Catalogue extends CI_Controller {
 		$data['books'] = $list['result'];
 			
 		/** TPL LOAD **/
-		$cont = $this->load->view('content_view', $data, true);
+		$cont = $this->load->view('user/layouts/content', $data, true);
 		
 		$res = array(
 				'content' => $cont,
 				'total' => $list['count']);
 		
 		return $res;
-		
 	}
 	
 	private function cats()

@@ -62,7 +62,7 @@ td:not(:first-child){
 }
 
 .container {
-	width: 850px;
+	width: 950px;
 	background: #FFF;
 	margin: 0 auto; 
 	overflow:hidden;
@@ -87,10 +87,11 @@ td:not(:first-child){
 .tophead {
 	width:100%;
 	height:235px;
-	background-image:url('../img/head.png');
+	background-image:url(../img/head.png);
 	overflow:hidden;
 	clear:both;
 	border-radius:5px;
+	background-repeat: no-repeat;
 }
 
 #sitename {
@@ -98,6 +99,7 @@ td:not(:first-child){
 	float: left;
 	display:block;
 	width: 250px;
+	margin-left:47px;
 		
 	font-size:18px;
 	
@@ -160,7 +162,7 @@ clear:right;
 #ulmenu  {
 	height:236px;
 	list-style:none;
-	padding-left:228px;
+	padding-left:268px;
 }
 
 #ulmenu li  {
@@ -176,7 +178,7 @@ clear:right;
 
 #ulmenu li a {
 			display: block;
-			width: 114px;
+			width: 118px;
 			float: left;
 			margin-top: 35px;
 			text-align:center;
@@ -287,6 +289,8 @@ margin:0 auto;
     color: black; 
 	font-weight:bold;
 	text-align:center;
+	font-size:9px;
+	min-width:20px;
     padding: 5px; 
     border-bottom: 1px solid #fff;
 	background-image: linear-gradient(bottom, rgb(179,201,219) 46%, rgb(216,230,230) 60%);
@@ -297,30 +301,249 @@ margin:0 auto;
 	background-image: -webkit-gradient(linear, left bottom, left top, color-stop(0.46, rgb(179,201,219)), color-stop(0.6, rgb(216,230,230)));		
 }
 
-	/* SECTION::Zen Pop Up Windows */
-.zenPopUpWindow {
-	margin-bottom:			0px;
-	border:					1px solid #b9b3af;
-	background:				#eef8fb url(../img/popUpBodyBG.jpg) no-repeat bottom right;
-	box-shadow:				4px 4px 3px rgba(180, 180, 250, 0.7);
-	text-align:				left;
+/**
+*
+* Add Edit Form
+*
+**/
+
+/* jqModal base Styling courtesy of;
+	Brice Burgess <bhb@iceburg.net> */
+
+/* The Window's CSS z-index value is respected (takes priority). If none is supplied,
+	the Window's z-index value will be set to 3000 by default (via jqModal.js). */
+	
+.jqmWindow {
+   
+    
+    position: fixed;
+    top: 1%;
+    left: 50%;
+    
+    margin-left: -300px;
+    width: 600px;
+    
+    background-color: #ccf;
+    color: #333;
+    border: 1px solid black;
+	border-radius:5px;
+	border: 2px outset #ccc;
+    padding: 12px;
+	z-index: 100;
+	opacity:0,09;
 }
-.zenPopUpWindow .titleBar {
-	position:				relative;
-	font-size:				16px;
-	padding:				5px 0 0 9px;
-	cursor:					move;
-}
-.zenPopUpWindow .titleBar span {
-	color:					#3c6b98;
+#overlay  {
+	opacity:100;
+	width:100%;
+	height:100%;
+	
+	
+	
 }
 
-.zenPopUpWindow .titleBar span.closeIcon {
-	position:				absolute;
-	top:					5px;
-	right:					7px;
-	background:				url(../img/icon18ClosePopUp.gif) no-repeat;
-	height:					18px;
-	width:					18px;
-	cursor:					pointer;
+.jqmOverlay { background-color: #000; }
+
+/* Background iframe styling for IE6. Prevents ActiveX bleed-through (<select> form elements, etc.) */
+* iframe.jqm {position:absolute;top:0;left:0;z-index:-1;
+	width: expression(this.parentNode.offsetWidth+'px');
+	height: expression(this.parentNode.offsetHeight+'px');
+}
+
+/* Fixed posistioning emulation for IE6
+     Star selector used to hide definition from browsers other than IE6
+     For valid CSS, use a conditional include instead */
+* html .jqmWindow {
+     position: absolute;
+     top: expression((document.documentElement.scrollTop || document.body.scrollTop) + Math.round(17 * (document.documentElement.offsetHeight || document.body.clientHeight) / 100) + 'px');
+}
+
+.jqmClose {
+	display: block;
+	float: right;
+	position: absolute;
+    top: 20px;
+    right: 20px;
+	width: 16px;
+	height: 16px;
+	background: url("../img/close.png") no-repeat;
+	cursor: pointer;
+}
+
+/**Delete confirmation JQM dialog**/
+div.jqmConfirm input[type="submit"] { padding: 4px; margin: 10px 30px; background: #000; color: #FFF; border: 1px solid #AAA; }
+
+/* jqModal confirm CSS courtesy of;
+   Alexandre Plennevaux <alexandre@pixeline.be>,
+   Brice Burgess <bhb@iceburg.net> */
+
+div.jqmConfirm { /* contains + positions the alert window */
+  display: none;
+  position: fixed;
+  top: 17%;
+  width: 100%;
+}
+    
+/* Fixed posistioning emulation for IE6
+     Star selector used to hide definition from browsers other than IE6
+     For valid CSS, use a conditional include instead */
+* html div.jqmConfirm {
+     position: absolute;
+     top: expression((document.documentElement.scrollTop || document.body.scrollTop) + Math.round(17 * (document.documentElement.offsetHeight || document.body.clientHeight) / 100) + 'px');
+}
+
+div.jqmConfirmWindow {
+  height:auto;
+  width: auto;
+  margin:0 auto;
+  max-width:400px;
+  padding: 0 10px 10px;
+  color:white;
+  background:inherit;
+  border:1px dashed #FFF;
+}
+
+.jqmConfirmTitle{
+  margin:5px 2px;
+  height:20px;
+  text-align:center;
+  text-transform:uppercase;
+  font-weight:bold;
+  color:#006;
+}
+.jqmConfirmTitle h1{
+  margin:5px 2px;
+  padding-left:5px;
+  padding:0;
+  font-size:16px;
+  text-transform:capitalize;
+  
+  letter-spacing:-1px;
+  font-weight:bold;
+
+  float:left;
+  height:20px;
+}
+
+div.jqmConfirmContent{
+	border-top:px;
+	color:white;
+	font:15px/18pt Verdana;
+	font-weight:bold;
+	padding:5px 20px 5px;
+	margin:5px auto;
+	letter-spacing:0px;
+}
+
+.badWords {
+/*display: none;*/
+width: 90%;
+padding: 5px;
+text-transform: uppercase;
+font-weight: bold;
+color: red;
+}
+
+.addEditFrm {
+display: table;
+width: 500px;
+margin: 10px auto;
+border: 1px outset white;
+border-radius:5px;
+padding: 7px;
+background-color: #036;
+color: white;
+font-weight: bold;
+
+}
+
+.addEditFrm input.sBtns {
+	border-radius: 20px;
+	cursor: pointer;
+	text-align: center;
+	width:444px;
+	margin:0 10 auto;
+}
+
+.addEditFrm input.sBtns:hover{
+	backghound-color:black;
+	
+}
+
+/*�������������������������������������������������
+  clearing a float without additional markup
+   http://www.positioniseverything.net/easyclearing.html */
+
+.clearfix:after {
+    content: "."; 
+    display: block; 
+    height: 0; 
+    clear: both; 
+    visibility: hidden;
+}
+
+.clearfix {display: inline-block;}
+
+/* Hides from IE-mac */
+* html .clearfix {
+	height: 1%;
+}
+.clearfix {
+	display:block;
+	}
+/* End hide from IE-mac */
+
+
+.error {
+float:left;
+width:16px;
+height:16px;
+padding: 0;
+margin: 10px 3px 0;
+display: block;
+text-indent: -2000px;
+overflow: hidden;
+background: url(../img/error.png) no-repeat;
+}
+ 
+.addEditFrm div {
+margin-bottom:3px;	
+}
+
+.addEditFrm span, .addEditFrm input {
+float: left;
+display: table-cell;
+width: 215px;
+height:20px;
+margin: 7px 5px;
+font-family: Verdana;
+font-size: 13px;
+}
+
+.addEditFrm select {
+	float: left;
+	width:215px;
+	display: table-cell;
+	height:20px;
+	margin: 7px 5px;
+	font-family: Verdana;
+	font-size: 13px;
+}
+
+.formfield {
+	font-family: "Courier New", Courier, monospace;
+	font-size: 10px;
+	line-height: 16px;
+	text-align: left;
+	border:1px solid yellow;
+	border-radius:3px;
+	margin-left:5px;
+	float:left;
+}
+
+
+
+div.addEditFrm  {
+	clear:both;
+	
+		
 }

@@ -1,8 +1,8 @@
 <?php
 class Admin extends CI_Controller {
 	
-	public function __construct() {
-
+	public function __construct()
+	{
 		parent::__construct();
 		
 		 if(!$this->session->userdata('loggedIn')){
@@ -12,111 +12,187 @@ class Admin extends CI_Controller {
 		$this->load->model('admin_model','model');
 	}
 	
-	public function index(){
-		$this->books();	
+	public function index()
+	{
+
+		redirect('admin/books');
+		
 	}
 	
 	public function books()
 	{
-		switch (@$_GET['act']){
-			case 'add':
-				$this->_addStuff();
-				break;
+		$offset = (int)$this->uri->segment(3, 0);
+		$action = isset($_GET['act']) ? $_GET['act'] : '';
+		$id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
+		switch($action)
+		{
 			case 'edit':
-				$this->_editStuff();
+				$content = $this->editBooks($id);
 				break;
 			case 'remove':
-				$this->removeStuff();
+				$content = $this->removeBooks($id);
 				break;
 			default:
-				$offset = (int)$this->uri->segment(3, 0);
-				$list = $this->model->getBookList($offset, PER_PAGE);			
-					
-					/** TPL DATA LOAD **/
-				$data['user'] = $this->session->userdata;
-				$data['books'] = $list['result'];
-				$data['paginator'] = $this->_paginator('admin/books', $list['count'], PER_PAGE);
-				$this->load->view('admin_view', $data);
-		}
-		
+				$content = $this->getBooks($offset);
+				break;
+		}	
+			/** TPL DATA **/
+		$data['content'] = $content;
+		$data['user'] = $this->session->userdata;
+			
+			/** TPL LOAD **/
+		$this->load->view('admin/admin_view', $data);
 	}
 	
 	public function authors()
 	{
-	
-		switch (@$_GET['act']){
-			case 'add':
-				$this->_addStuff();
-				break;
+		$offset = (int)$this->uri->segment(3, 0);
+		$action = isset($_GET['act']) ? $_GET['act'] : '';
+		$id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
+		switch($action)
+		{
 			case 'edit':
-				$this->_editStuff();
+				$content = $this->editAuthors($id);
 				break;
 			case 'remove':
-				$this->removeStuff();
+				$content = $this->removeAuthors($id);
 				break;
 			default:
-				$offset = (int)$this->uri->segment(3, 0);
-				$list = $this->model->getAuthorList($offset, PER_PAGE);
-					
-				/** TPL DATA LOAD **/
-				$data['user'] = $this->session->userdata;
-				$data['authors'] = $list['result'];
-				$data['paginator'] = $this->_paginator('admin/authors', $list['count'], PER_PAGE);
-				$this->load->view('admin_view', $data);
-				
-		}
+				$content = $this->getAuthors($offset);
+				break;
+		}	
+			/** TPL DATA **/
+		$data['content'] = $content;
+		$data['user'] = $this->session->userdata;
+			
+			/** TPL LOAD **/
+		$this->load->view('admin/admin_view', $data);
 	}
 	
 	public function cats()
 	{
+		$offset = (int)$this->uri->segment(3, 0);
+		$action = isset($_GET['act']) ? $_GET['act'] : '';
+		$id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 		
-		switch (@$_GET['act']){
-			case 'add':
-				$this->_addStuff();
-				break;
+		switch($action)
+		{
 			case 'edit':
-				$this->_editStuff();
+				$content = $this->editCats($id);
 				break;
 			case 'remove':
-				$this->removeStuff();
+				$content = $this->removeCats($id);
 				break;
 			default:
-				$list = $this->model->getCatList();
-					
-				/** TPL DATA LOAD **/
-				$data['user'] = $this->session->userdata;
-				$data['cats'] = $list['result'];
-				$data['paginator'] = $this->_paginator('admin/authors', $list['count'], PER_PAGE);
-				$this->load->view('admin_view', $data);
+				$content = $this->getCats($offset);
+				break;
 		}
+			/** TPL DATA **/
+		$data['content'] = $content;
+		$data['user'] = $this->session->userdata;
+						
+			/** TPL LOAD **/
+		$this->load->view('admin/admin_view', $data);
 	}
 	
-	public function logout()
+	private function getBooks($offset)
 	{
-		
-		$this->session->sess_destroy();
-		redirect('catalogue');
-		exit;
-		
-	}
-	
-	private function _addStuff($stuff){
-		
-		echo 'add';
-		
-	}
-	
-	private function _editStuff($stuff){
-		
-		echo 'edit';
-	
-	}
-	
-	private function removeStuff($stuff){
+		$list = $this->model->getBookList($offset, PER_PAGE);
+			
+			/** TPL DATA **/
+		$data['books'] = $list['result'];
+		$data['paginator'] = $this->_paginator('admin/books', $list['count'], PER_PAGE);
+			
+			/** TPL LOAD **/
+		$content = $this->load->view('admin/layouts/booksContent', $data, TRUE);
 
-		echo 'remove';
+		return $content;		
 	}
 	
+	private function editBooks($id)
+	{
+		if(isset($_POST['sBtn']))
+		{
+		
+			$content =	print_r($_POST,1);
+		
+		} else {
+
+			
+			$book = $this->model->getBooksById($id);
+			$authors = $this->model->getAuthorList();
+			$cats = $this->model->getCatList();
+			
+				/** TPL DATA **/
+			$data['book'] = $book;
+			$data['authors'] = $authors['result']; 
+			$data['cats'] = $cats['result'];
+			/* header('Content-type: text/html; charset=utf8');
+			$content =	print_r($data['authors'],1); */
+			
+				
+			/** TPL LOAD **/
+		$content = $this->load->view('admin/layouts/booksAddEdit', $data, TRUE);
+		
+		}
+		
+		return $content;
+		
+	}
+	
+	private function removeBooks($id)
+	{
+	
+	}
+	
+	private function getAuthors($offset)
+	{
+		$list = $this->model->getAuthorList($offset, PER_PAGE);
+			
+			/** TPL DATA **/
+		$data['authors'] = $list['result'];
+		$data['paginator'] = $this->_paginator('admin/authors', $list['count'], PER_PAGE);
+			
+			/** TPL LOAD **/
+		$content = $this->load->view('admin/layouts/authorsContent', $data, TRUE);
+		
+		return $content;
+	}
+	
+	private function editAuthors($id)
+	{
+	
+	}
+	
+	private function removeAuthors($id)
+	{
+	
+	}
+	
+	private  function getCats($offset)
+	{			
+		$list = $this->model->getCatList($offset, PER_PAGE);
+			
+			/** TPL DATA **/
+		$data['cats'] = $list['result'];
+		$data['paginator'] = $this->_paginator('admin/cats', $list['count'], PER_PAGE);
+			
+			/** TPL LOAD **/
+		$content = $this->load->view('admin/layouts/catsContent', $data, TRUE);
+		
+		return $content;
+	}
+	
+	private function editCats($id)
+	{
+	
+	}
+	
+	private function removeCats($id)
+	{
+	
+	}
+		
 	private function _paginator($uri, $total, $pp, $nlinks=2)
 	{	
 		$this->load->library('pagination');
@@ -137,6 +213,21 @@ class Admin extends CI_Controller {
 		$this->pagination->initialize($config);
 		
 		return $this->pagination->create_links();
+	}
+	
+	public function logout()
+	{
+		$this->session->sess_destroy();
+		redirect('catalogue');
+		exit;
+	}
+	
+	public function test()
+	{
+	
+		header('Content-type: text/html; charset=utf8');
+		echo 'test';
+	
 	}
 	
 }
