@@ -4,11 +4,8 @@ class Admin_model extends CI_Model {
 	
 	public function __construct()
 	{	
-		
-		parent::__construct();
-			
+		parent::__construct();	
 	}
-	
 	
 	public function getBookList($off, $pp)
 	{
@@ -22,7 +19,7 @@ class Admin_model extends CI_Model {
 		return $this->commonGetRslt($this->db->get());
 	}
 	
-	public function getBooksById($id)
+	public function getBookById($id)
 	{	
 		$item = (int)$id;
 		$this->db
@@ -32,7 +29,7 @@ class Admin_model extends CI_Model {
 			->join('bc_categories AS t3', 't1.id_category = t3.id', 'LEFT')
 			->where('t1.id = '.$item);
 		
-		$query = $this->db->get('');
+		$query = $this->db->get();
 	
 		return $query->row();
 	}
@@ -45,10 +42,9 @@ class Admin_model extends CI_Model {
 		$this->db->insert('bc_books');
 		
 		return $this->db->insert_id();
-		
 	}
 	
-	public function editBook($id, array $data)
+	public function updateBook($id, array $data)
 	{
 		$item = (int)$id;
 		
@@ -62,7 +58,7 @@ class Admin_model extends CI_Model {
 		return $this->db->affected_rows();
 	}
 	
-	public function removeBook($id)
+	public function deleteBook($id)
 	{
 		$item = (int)$id;
 		
@@ -71,24 +67,130 @@ class Admin_model extends CI_Model {
 			->delete('bc_books');
 		
 		return $this->db->affected_rows();
-		
 	}
 	
-	public function getCatList()
+	public function getAuthorList($off, $pp)
+	{
+		$this->db
+			->select('SQL_CALC_FOUND_ROWS *', FALSE)
+			->from('bc_authors')
+			->limit($pp, $off);
+	
+		return $this->commonGetRslt($this->db->get());
+	}
+	
+	public function getAllAuthors()
 	{
 		$this->db
 			->select('*')
-			->from('bc_categories');
-	
+			->from('bc_authors');
+		
 		$query = $this->db->get();
-	
-		$res = array(
-				'count' => $query->num_rows(),
-				'result' => $query->result());
+		
+		$res = $query->result();
+		
 		return $res;
 	}
 	
-	public function insertCat($data)
+	public function getAuthorById($id)
+	{
+		$item = (int)$id;
+		$this->db
+			->select('*')
+			->from('bc_authors')
+			->where('id = '.$item);
+	
+		$query = $this->db->get();
+	
+		return $query->row();
+	}
+	
+	public function insertAuthor($data)
+	{
+		foreach ($data as $key => $val){
+			$this->db->set($key, $this->db->escape_str($val));
+		}
+		$this->db->insert('bc_authors');
+	
+		return $this->db->insert_id();
+	}
+	
+	public function updateAuthor($id, array $data)
+	{
+		$item = (int)$id;
+	
+		foreach ($data as $key => $val){
+			$this->db->set($key, $this->db->escape_str($val));
+		}
+		$this->db
+			->where('id', $item)
+			->update('bc_authors');
+	
+		return $this->db->affected_rows();
+	}
+	
+	public function deleteAuthor($id)
+	{
+		$item = (int)$id;
+		$this->db
+			->where('id', $item)
+			->delete('bc_authors');
+	
+		return $this->db->affected_rows();
+	}
+	
+	public function getCatList($off, $pp)
+	{
+		$this->db
+			->select('SQL_CALC_FOUND_ROWS t1.id, t1.name, t1.active, t2.name AS parent', FALSE)
+			->from('bc_categories AS t1')
+			->join('bc_categories AS t2','t1.parent = t2.id','LEFT')
+			->limit($pp, $off);
+		
+		return $this->commonGetRslt($this->db->get());
+	}
+	
+	public function getAllCats()
+	{// TODO re-work method
+		$this->db
+			->select('*')
+			->from('bc_categories');
+		
+		$query = $this->db->get();
+		
+		$res = $query->result();
+		
+		return $res;
+	} 
+	
+	public function getParentCats()
+	{ // TODO re-work method
+		$this->db
+			->select('*')
+			->from('bc_categories')
+			->where('parent = 0 ');
+
+		$query = $this->db->get();
+		
+		$res = $query->result();
+		
+		return $res;
+	} 
+	
+	public function getCatById($id)
+	{
+		$item = (int)$id;
+		$this->db
+			->select('*')
+			->from('bc_categories')
+			->where('id = '.$item);
+	
+		$query = $this->db->get();
+	
+		return $query->row();
+	}
+	
+ 	public function insertCat($data)
 	{	
 		foreach ($data as $key => $val){
 			$this->db->set($key, $this->db->escape_str($val));
@@ -98,7 +200,7 @@ class Admin_model extends CI_Model {
 		return $this->db->insert_id();	
 	}
 	
-	public function editCat($id, array $data)
+	public function updateCat($id, array $data)
 	{
 		$item = (int)$id;
 		
@@ -106,14 +208,13 @@ class Admin_model extends CI_Model {
 			$this->db->set($key, $this->db->escape_str($val));
 		}
 		$this->db
-			->update('bc_categories')
-			->where('id', $item);
-		
+			->where('id', $item)
+			->update('bc_categories');
 		
 		return $this->db->affected_rows();	
 	}
 	
-	public function removeCat($id)
+	public function deleteCat($id)
 	{		
 		$item = (int)$id;
 		
@@ -122,58 +223,7 @@ class Admin_model extends CI_Model {
 			->delete('bc_categories');
 		
 		return $this->db->affected_rows();
-		
 	}
-	
-	public function getAuthorList()
-	{
-		$this->db
-			->select('*')
-			->from('bc_authors');
-	
-		$query = $this->db->get('');
-		$res = array(
-				'count' => $query->num_rows(),
-				'result' => $query->result());
-		return $res;
-	}
-	
-	public function insertAuthor($data)
-	{
-		foreach ($data as $key => $val){
-			$this->db->set($key, $this->db->escape_str($val));
-		}
-		$this->db->insert('bc_authors');
-		
-		return $this->db->insert_id();
-		
-	}
-	
-	public function editAuthor($id)
-	{
-		$item = (int)$id;
-		
-		foreach ($data as $key => $val){
-			$this->db->set($key, $this->db->escape_str($val));
-		}
-		$this->db
-			->where('id', $item)
-			->update('bc_authors');
-		
-		return $this->db->affected_rows();
-		
-	}
-	
-	public function removeAuthor($id)
-	{
-		$item = (int)$id;
-		$this->db
-			->where('id', $item)
-			->delete('bc_authors');
-		
-		return $this->db->affected_rows();
-	}
-	
 	
 	private function commonGetStmt()
 	{

@@ -7,6 +7,7 @@
 		<td class="tdhead" width="7%">Автор</td>
 		<td class="tdhead" width="7%">Категория</td>
 		<td class="tdhead" width="5%">Отображение на сайте</td>
+		<td class="tdhead">Рейтинг</td>
 		<td class="tdhead" width="5%">Дата Редактирования</td>
 		<td class="tdhead"width="8%" colspan="2">Редактирование \ Удаление</td>
 	</tr>
@@ -18,6 +19,7 @@
 		<td><?=$val->author?></td>
 		<td><?=$val->category?></td>
 		<td><?=$val->active?'Да':'Нет'?></td>
+		<td><?=$val->rate?></td>
 		<td><?=$val->date?></td>
 		<td class="edit"><a href='<?=base_url('admin/books?act=edit&id='.$val->id)?>'>&nbsp;</a></td>
 		<td class="remove"><a href='<?=base_url('admin/books?act=remove&id='.$val->id)?>'>&nbsp;</a></td>

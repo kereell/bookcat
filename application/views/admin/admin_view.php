@@ -3,9 +3,9 @@
 	<head>
 		<?=meta('Content-type', 'text/html; charset=utf-8', 'equiv')."\n"?>
 		<?=link_tag('assets/css/admin.css')."\n"?>
-		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+		<!-- <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script> -->
 		<script src="<?=base_url('assets/js/admin.js')."\n"?>"></script>
-		<title><?=$title?></title>    
+		<title><?=@$title.@$addTitle?></title>    
 	</head>
 	<body>
 		<div class="container">
@@ -24,7 +24,8 @@
             </div><!--end of tophead -->
             <div class="content">
     			<div class="buttons">
-    				<button class="onebutton" role="button" onClick="openAdd()">Добавить</button>
+    				<button style="display: none;" class="onebutton" role="button" onClick="openAdd()">Добавить</button>
+    				<a href="<?=base_url('admin/'.$method.'?act=add')?>">Добавить</a>
     			</div>
 	    		<div id="intcontent">
 		    	<?=$content?>

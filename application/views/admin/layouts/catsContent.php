@@ -9,7 +9,7 @@
 	<?php foreach($cats as $val):?>
 	<tr>
 		<td><?=$val->name?></td>
-		<td><?=$val->parent?></td>
+		<td><?=$val->parent?:'Нет'?></td>
 		<td><?=$val->active?'Да':'Нет'?></td>
 		<td class="edit"><a href='<?=base_url('admin/cats?act=edit&id='.$val->id)?>'>&nbsp;</a></td>
 		<td class="remove"><a href='<?=base_url('admin/cats?act=remove&id='.$val->id)?>'>&nbsp;</a></td>

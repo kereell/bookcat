@@ -22,23 +22,37 @@ class Admin extends CI_Controller {
 	public function books()
 	{
 		$offset = (int)$this->uri->segment(3, 0);
-		$action = isset($_GET['act']) ? $_GET['act'] : '';
+		$action = isset($_GET['act']) ? $_GET['act'] : 'all';
 		$id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
+		$userdata = $this->session->userdata;
+		
 		switch($action)
 		{
 			case 'edit':
-				$content = $this->editBooks($id);
+				$content = $this->editBook($id);
+				break;
+			case 'add':
+				$content = $this->addBook();
 				break;
 			case 'remove':
-				$content = $this->removeBooks($id);
+				$content = $this->removeBook($id);
 				break;
-			default:
+			case 'all':
 				$content = $this->getBooks($offset);
 				break;
-		}	
+			case 'single':
+				$content = $this->getBookById($id);
+				break;
+			default:
+				$content = 'No such action';
+				break;
+		}
+			
 			/** TPL DATA **/
+		$data['user'] = $userdata;
+		$data['title'] = 'Admin Area';
+		$data['method'] = __FUNCTION__;
 		$data['content'] = $content;
-		$data['user'] = $this->session->userdata;
 			
 			/** TPL LOAD **/
 		$this->load->view('admin/admin_view', $data);
@@ -47,23 +61,36 @@ class Admin extends CI_Controller {
 	public function authors()
 	{
 		$offset = (int)$this->uri->segment(3, 0);
-		$action = isset($_GET['act']) ? $_GET['act'] : '';
+		$action = isset($_GET['act']) ? $_GET['act'] : 'all';
 		$id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
+		$userdata = $this->session->userdata;
+		
 		switch($action)
 		{
 			case 'edit':
-				$content = $this->editAuthors($id);
+				$content = $this->editAuthor($id);
+				break;
+			case 'add':
+				$content = $this->addAuthor();
 				break;
 			case 'remove':
-				$content = $this->removeAuthors($id);
+				$content = $this->removeAuthor($id);
+				break;
+			case 'all':
+				$content = $this->getAuthors($offset);
+				break;
+			case 'single':
+				$content = $this->getAuthorById($id);
 				break;
 			default:
-				$content = $this->getAuthors($offset);
+				$content = 'No such action';
 				break;
 		}	
 			/** TPL DATA **/
+		$data['user'] = $userdata;
+		$data['title'] = 'Admin Area';
+		$data['method'] = __FUNCTION__;
 		$data['content'] = $content;
-		$data['user'] = $this->session->userdata;
 			
 			/** TPL LOAD **/
 		$this->load->view('admin/admin_view', $data);
@@ -72,27 +99,53 @@ class Admin extends CI_Controller {
 	public function cats()
 	{
 		$offset = (int)$this->uri->segment(3, 0);
-		$action = isset($_GET['act']) ? $_GET['act'] : '';
+		$action = isset($_GET['act']) ? $_GET['act'] : 'all';
 		$id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
+		$userdata = $this->session->userdata;
 		
 		switch($action)
 		{
 			case 'edit':
-				$content = $this->editCats($id);
+				$content = $this->editCat($id);
+				break;
+			case 'add':
+				$content = $this->addCat();
 				break;
 			case 'remove':
-				$content = $this->removeCats($id);
+				$content = $this->removeCat($id);
 				break;
-			default:
+			case 'all':
 				$content = $this->getCats($offset);
 				break;
+			case 'single':
+				$content = $this->getCatById($id);
+				break;
+			default:
+				$content = 'No such action';
+				break;
 		}
+
 			/** TPL DATA **/
+		$data['user'] = $userdata;
+		$data['title'] = 'Admin Area';
+		$data['method'] = __FUNCTION__;
 		$data['content'] = $content;
-		$data['user'] = $this->session->userdata;
-						
+			
 			/** TPL LOAD **/
 		$this->load->view('admin/admin_view', $data);
+	}
+	
+	public function logout()
+	{
+		$this->session->sess_destroy();
+		redirect('catalogue');
+		exit;
+	}
+	
+	public function test()
+	{
+		header('Content-type: text/html; charset=utf8');
+		echo 'test';
 	}
 	
 	private function getBooks($offset)
@@ -100,6 +153,7 @@ class Admin extends CI_Controller {
 		$list = $this->model->getBookList($offset, PER_PAGE);
 			
 			/** TPL DATA **/
+		$data['addTitle'] = ' :: Книги';
 		$data['books'] = $list['result'];
 		$data['paginator'] = $this->_paginator('admin/books', $list['count'], PER_PAGE);
 			
@@ -109,45 +163,102 @@ class Admin extends CI_Controller {
 		return $content;		
 	}
 	
-	private function editBooks($id)
+	private function getBookById($id)
+	{
+		$book[0] = $this->model->getBookById($id);
+			
+		/** TPL DATA **/
+		$data['addTitle'] = ' :: Книга :: '.$book[0]->title;
+		$data['books'] = $book;
+			
+		/** TPL LOAD **/
+		$content = $this->load->view('admin/layouts/booksContent', $data, TRUE);
+	
+		return $content;
+	}
+	
+	private function addBook()
 	{
 		if(isset($_POST['sBtn']))
 		{
-			
-			$content = $this->model->editBook(1, $_POST);
+			$data = array_slice($_POST, 1,6);
 				
-		
+			$ins = $this->model->insertBook($data);
+			if($ins){
+				redirect('admin/books?act=single&id='.$ins);
+			} else {
+				$content = 'Возникли проблеммы с добавлением книги: '.$data['name'];
+			}
 		} else {
-
-			
-			$book = $this->model->getBooksById($id);
-			$authors = $this->model->getAuthorList();
-			$cats = $this->model->getCatList();
-			
-				/** TPL DATA **/
-			$data['book'] = $book;
-			$data['authors'] = $authors['result']; 
-			$data['cats'] = $cats['result'];			
+			$authors = $this->model->getAllAuthors();
+			$cats = $this->model->getAllCats();
 				
-				/** TPL LOAD **/
+			/** TPL DATA **/
+			$data['addTitle'] = ' :: Книги :: Добавление';
+			$data['action'] = 'add';
+			$data['authors'] = $authors;
+			$data['cats'] = $cats;
+				
+			/** TPL LOAD **/
 			$content = $this->load->view('admin/layouts/booksAddEdit', $data, TRUE);
-		
 		}
-		
+	
 		return $content;
-		
 	}
 	
-	private function removeBooks($id)
+	private function editBook($id)
 	{
+		if(isset($_POST['sBtn']))
+		{
+			$data = $_POST;
+			$id = (int)array_shift($data);
+			array_pop($data);
+			$upd = $this->model->updateBook($id, $data);
+			
+			if($upd){
+				redirect('admin/books?act=single&id='.$id);
+			} else {
+					$content = 'Изменения для книги <strong>"'.$data['name'].'"</strong> не произведены.';
+				}
+		} else {
+				$book = $this->model->getBookById($id);
+				$authors = $this->model->getAllAuthors();
+				$cats = $this->model->getAllCats();
+
+					/** TPL DATA **/
+				$data['addTitle'] = ' :: Книги :: Редактирование';
+				$data['action'] = 'edit';
+				$data['book'] = $book;
+				$data['authors'] = $authors; 
+				$data['cats'] = $cats;			
+					
+					/** TPL LOAD **/
+				$content = $this->load->view('admin/layouts/booksAddEdit', $data, TRUE);
+			}
+			
+		return $content;
+	}
 	
+	private function removeBook()
+	{
+		$id = (int)$_GET['id'];
+		if($id){
+			$content = $this->model->deleteBook($id);
+		}
+		if($content){
+			redirect('admin/books');
+		} else {
+				$content = 'Возникли проблеммы с удалением книги id: '.$id;
+			}
+		return $content;
 	}
 	
 	private function getAuthors($offset)
 	{
 		$list = $this->model->getAuthorList($offset, PER_PAGE);
-			
+
 			/** TPL DATA **/
+		$data['addTitle'] = ' :: Авторы';
 		$data['authors'] = $list['result'];
 		$data['paginator'] = $this->_paginator('admin/authors', $list['count'], PER_PAGE);
 			
@@ -156,22 +267,95 @@ class Admin extends CI_Controller {
 		
 		return $content;
 	}
-	
-	private function editAuthors($id)
+		
+	private function getAuthorById($id)
 	{
+		$author[0] = $this->model->getAuthorById($id);
 	
+		/** TPL DATA **/
+		$data['addTitle'] = ' :: Автор :: '.$author[0]->name;
+		$data['authors'] = $author;
+					
+		/** TPL LOAD **/
+		$content = $this->load->view('admin/layouts/authorsContent', $data, TRUE);
+	
+		return $content;
 	}
 	
-	private function removeAuthors($id)
+	private function addAuthor()
 	{
-	
+		if(isset($_POST['sBtn']))
+		{
+			$data = array_slice($_POST, 1, 2);				
+			$ins = $this->model->insertAuthor($data);
+			
+			if($ins){
+				redirect('admin/authors?act=single&id='.$ins);
+			} else {
+				$content = 'Возникли проблеммы с добавлением автора: '.$data['name'];
+			}
+		} else {				
+				/** TPL DATA **/
+			$data['addTitle'] = ' :: Авторы :: Добавление';
+			$data['action'] = 'add';
+				
+				/** TPL LOAD **/
+			$content = $this->load->view('admin/layouts/authorsAddEdit', $data, TRUE);
+		}
+		
+		return $content;
+	}
+		
+	private function editAuthor($id)
+	{
+		if(isset($_POST['sBtn']))
+		{
+			$data = $_POST;
+			$id = (int)array_shift($data);
+			array_pop($data);
+			
+			$upd = $this->model->updateAuthor($id, $data);
+				
+			if($upd){
+				redirect('admin/authors?act=single&id='.$id);
+			} else {
+				$content = 'Изменения для автора <strong>"'.$data['name'].'"</strong> не произведены.';
+			}
+		} else {
+			$author = $this->model->getAuthorById($id);
+		
+				/** TPL DATA **/
+			$data['addTitle'] = ' :: Авторы :: Редактирование :: '.$author->name;
+			$data['action'] = 'edit';
+			$data['author'] = $author;
+				
+				/** TPL LOAD **/
+			$content = $this->load->view('admin/layouts/authorsAddEdit', $data, TRUE);
+		}
+			
+		return $content;
 	}
 	
-	private  function getCats($offset)
+	private function removeAuthor($id)
+	{
+		$id = (int)$_GET['id'];
+		if($id){
+			$content = $this->model->deleteAuthor($id);
+		}
+		if($content){
+			redirect('admin/authors');
+		} else {
+			$content = 'Возникли проблеммы с удалением автора id: '.$id;
+		}
+		return $content;
+	}
+	
+	private function getCats($offset)
 	{			
 		$list = $this->model->getCatList($offset, PER_PAGE);
 			
 			/** TPL DATA **/
+		$data['addTitle'] = ' :: Категории';
 		$data['cats'] = $list['result'];
 		$data['paginator'] = $this->_paginator('admin/cats', $list['count'], PER_PAGE);
 			
@@ -181,17 +365,93 @@ class Admin extends CI_Controller {
 		return $content;
 	}
 	
-	private function editCats($id)
+	private function getCatById($id)
 	{
-	
-	}
-	
-	private function removeCats($id)
-	{
-	
-	}
+		$cats[0] = $this->model->getCatById($id);
+			
+		/** TPL DATA **/
+		$data['addTitle'] = ' :: Категория :: '.$cats[0]->name;
+		$data['cats'] = $cats;
+			
+		/** TPL LOAD **/
+		$content = $this->load->view('admin/layouts/catsContent', $data, TRUE);
 		
-	private function _paginator($uri, $total, $pp, $nlinks=2)
+		return $content;
+	} 
+	
+	private function addCat()
+	{
+		if(isset($_POST['sBtn']))
+		{
+			$data = array_slice($_POST, 1, 3);
+			$ins = $this->model->insertCat($data);
+				
+			if($ins){
+				redirect('admin/cats?act=single&id='.$ins);
+			} else {
+				$content = 'Возникли проблеммы с добавлением категории: '.$data['name'];
+			}
+		} else {
+			$categories = $this->model->getParentCats();
+				
+				/** TPL DATA **/
+			$data['categories'] = $categories;
+			$data['addTitle'] = ' :: Категории :: Добавление';
+			$data['action'] = 'add';
+	
+				/** TPL LOAD **/
+			$content = $this->load->view('admin/layouts/catsAddEdit', $data, TRUE);
+		}
+	
+		return $content;
+	}
+	
+	private function editCat($id)
+	{
+		if(isset($_POST['sBtn']))
+		{
+			$data = $_POST;
+			$id = (int)array_shift($data);
+			array_pop($data);
+			$upd = $this->model->updateCat($id, $data);
+				
+			if($upd){
+				redirect('admin/cats?act=single&id='.$id);
+			} else {
+				$content = 'Изменения для категории <strong>"'.$data['name'].'"</strong> не произведены.';
+			}
+		} else {
+			$cat = $this->model->getCatById($id);
+			$categories = $this->model->getParentCats();
+			
+				/** TPL DATA **/
+			$data['addTitle'] = ' :: Категории :: Редактирование :: '.$cat->name;
+			$data['action'] = 'edit';
+			$data['cat'] = $cat;
+			$data['categories'] = $categories;
+				
+				/** TPL LOAD **/
+			$content = $this->load->view('admin/layouts/catsAddEdit', $data, TRUE);
+			}
+		
+		return $content;
+	}
+	
+	private function removeCat($id)
+	{
+		$id = (int)$_GET['id'];
+		if($id){
+			$content = $this->model->deleteCat($id);
+		}
+		if($content){
+			redirect('admin/cats');
+		} else {
+			$content = 'Возникли проблеммы с удалением категории id: '.$id;
+		}
+		return $content;
+	}
+	
+	private function _paginator($uri, $total, $pp, $nlinks=1)
 	{	
 		$this->load->library('pagination');
 		
@@ -212,20 +472,10 @@ class Admin extends CI_Controller {
 		
 		return $this->pagination->create_links();
 	}
-	
-	public function logout()
+
+	private function debug(array $data)
 	{
-		$this->session->sess_destroy();
-		redirect('catalogue');
-		exit;
-	}
-	
-	public function test()
-	{
-	
-		header('Content-type: text/html; charset=utf8');
-		echo 'test';
-	
+		return __METHOD__.'<br /><pre>'.print_r($data,1).'</pre>';
 	}
 	
 }
