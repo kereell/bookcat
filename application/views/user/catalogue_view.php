@@ -54,7 +54,7 @@
 		  	<div class="ajaxLoad">&nbsp;</div>
 		  	<div class="breadcrumbs"><?=$breadcrumbs?></div>
 			<div class="content">
-			<?=$cont?>
+			<?=$content?>
 			</div>
 		</div>	
 		<div style="background-color: grey;" id="footer">Footer</div>

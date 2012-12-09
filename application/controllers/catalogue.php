@@ -14,25 +14,24 @@ class Catalogue extends CI_Controller {
 	
 	public function index()
 	{		
-		$cat = (int)$this->uri->segment(3, 0);
-		$offset = (int)$this->uri->segment(4, 0);
+		$cat = abs((int)$this->uri->segment(3, 0));
+		$offset = abs((int)$this->uri->segment(4, 0));
 		
 		switch (TRUE){
 			case $cat > 0:
-				$cont = $this->booksCat($cat, $offset);
+				$content = $this->getBooksByCat($cat, $offset);
 				break;
 			
 			case isset($_GET['search']):
-				$cont = $this->searchBooks($offset, $_GET['search']);
+				$content = $this->searchBooks($cat, $offset, $_GET['search']);
 				break;
 			
 			default:
-				$cont = $this->booksAll($offset);
+				$content = $this->getBooks($cat, $offset);
 				break;
 		}
 		$cats = $this->cats();
 		$userdata = $this->session->userdata;
-		$paginator = $this->_paginator('/catalogue/index/'.$cat, $cont['total'], PER_PAGE);
 		$breadcrumbs = $this->breadcrumbs($cat);
 			
 			/** TPL DATA **/
@@ -40,63 +39,65 @@ class Catalogue extends CI_Controller {
 		$data['user'] = $userdata; 
 		$data['title'] = 'Каталог';
 		$data['categories'] = $cats;
-		$data['cont'] = $cont['content'];
-		$data['paginator'] = $paginator; 
+		$data['content'] = $content;
 			
 			/** TPL LOAD **/
 		$this->load->view('user/catalogue_view', $data);
 	}
 	
+	public function test()
+	{
 	
-	private function booksAll($offset)
+		header('Content-type: text/html; charset=utf8');
+		echo 'test';
+	
+	}
+	
+	private function getBooks($cat, $offset)
 	{ 
 		$list = $this->model->getBooks($offset, PER_PAGE);
+		$paginator = $this->_paginator('/catalogue/index/'.$cat, $list['count'], PER_PAGE);
 			
 			/** TPL DATA **/
 		$data['books'] = $list['result'];
-			
+		$data['paginator'] = $paginator; 
+		
 			/** TPL LOAD **/
 		$cont = $this->load->view('user/layouts/content', $data, true);
 		
-		$res = array(
-				'content' => $cont,
-				'total' => $list['count']);
-		
-		return $res;
+		return $cont;
 	}
 	
-	private function booksCat($cat, $offset)
+	private function getBooksByCat($cat, $offset)
 	{
 		$list = $this->model->getBooksByCat($offset, PER_PAGE, $cat);
-		
+		$paginator = $this->_paginator('/catalogue/index/'.$cat, $list['count'], PER_PAGE);
+			
 			/** TPL DATA **/
 		$data['books'] = $list['result'];
+		$data['paginator'] = $paginator;
 			
 			/** TPL LOAD **/
 		$cont = $this->load->view('user/layouts/content', $data, true);
-		
-		$res = array(
-				'content' => $cont,
-				'total' => $list['count']);
-		
-		return $res;	
+
+		return $cont;	
 	}
 	
-	private function searchBooks($offset, $search)
+	private function searchBooks($cat, $offset, $search)
 	{
 		$list = $this->model->getBooksBySearch($offset, PER_PAGE, $search);
-	
-		/** TPL DATA **/
+		$paginator = $this->_paginator('/catalogue/index/'.$cat, $list['count'], PER_PAGE);
+
+//		$this->debug($list);
+		
+			/** TPL DATA **/
 		$data['books'] = $list['result'];
-			
-		/** TPL LOAD **/
+		$data['paginator'] = $paginator;
+					
+			/** TPL LOAD **/
 		$cont = $this->load->view('user/layouts/content', $data, true);
 		
-		$res = array(
-				'content' => $cont,
-				'total' => $list['count']);
-		
-		return $res;
+		return $cont;
 	}
 	
 	private function cats()
@@ -135,13 +136,12 @@ class Catalogue extends CI_Controller {
 	
 		return $this->pagination->create_links();
 	}
-
-	public function test()
+	
+	private function debug(array $data)
 	{
-	
 		header('Content-type: text/html; charset=utf8');
-		echo 'test';
 	
+		exit(__METHOD__.'<br /><pre>'.print_r($data,1).'</pre>');
 	}
 	
 }
