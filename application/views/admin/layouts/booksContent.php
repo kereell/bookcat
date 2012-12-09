@@ -9,20 +9,24 @@
 		<td class="tdhead" width="5%">Отображение на сайте</td>
 		<td class="tdhead">Рейтинг</td>
 		<td class="tdhead" width="5%">Дата Редактирования</td>
-		<td class="tdhead"width="8%" colspan="2">Редактирование \ Удаление</td>
+		<td class="tdhead" width="8%" colspan="2">Редактирование \ Удаление</td>
 	</tr>
-	<?php foreach($books as $val):?>
+	<?php foreach($books as $book):?>
 	<tr>
-		<td><?=img('assets/img/'.$val->img.'.jpg')?></td>
-		<td><?=$val->title?></td>
-		<td><?=$val->description?></td>
-		<td><?=$val->author?></td>
-		<td><?=$val->category?></td>
-		<td><?=$val->active?'Да':'Нет'?></td>
-		<td><?=$val->rate?></td>
-		<td><?=$val->date?></td>
-		<td class="edit"><a href='<?=base_url('admin/books?act=edit&id='.$val->id)?>'>&nbsp;</a></td>
-		<td class="remove"><a href='<?=base_url('admin/books?act=remove&id='.$val->id)?>'>&nbsp;</a></td>
+		<?php if(file_exists('assets/img/upload/thumbnails/'.$book->img)):?>
+			<td><?=img('assets/img/upload/thumbnails/'.$book->img)?></td>
+		<?php else:?>
+			<td><?=img('assets/img/default_thumb.jpg')?></td>
+		<?php endif?>
+		<td><?=$book->title?></td>
+		<td><?=$book->description?></td>
+		<td><?=$book->author?></td>
+		<td><?=$book->category?></td>
+		<td><?=$book->active?'Да':'Нет'?></td>
+		<td><?=$book->rate?></td>
+		<td><?=$book->date?></td>
+		<td class="edit"><a href='?act=edit&id=<?=$book->id?>'>&nbsp;</a></td>
+		<td class="remove"><a href='?act=remove&id=<?=$book->id?>'>&nbsp;</a></td>
 	</tr>
 	<?php endforeach?>
 </table>

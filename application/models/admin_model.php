@@ -151,29 +151,30 @@ class Admin_model extends CI_Model {
 	}
 	
 	public function getAllCats()
-	{// TODO re-work method
+	{//TODO optimize the query
 		$this->db
 			->select('*')
-			->from('bc_categories');
+			->from('bc_categories')
+			->where('id NOT IN (SELECT parent FROM bc_categories GROUP BY parent)');
 		
 		$query = $this->db->get();
 		
 		$res = $query->result();
-		
+
 		return $res;
 	} 
 	
 	public function getParentCats()
-	{ // TODO re-work method
+	{ 
 		$this->db
 			->select('*')
 			->from('bc_categories')
-			->where('parent = 0 ');
+			->where('id NOT IN (SELECT id_category FROM bc_books GROUP BY id_category) AND parent = 0');
 
 		$query = $this->db->get();
 		
 		$res = $query->result();
-		
+
 		return $res;
 	} 
 	
@@ -246,7 +247,11 @@ class Admin_model extends CI_Model {
 	
 	private function debug(array $data)
 	{
-		return __METHOD__.'<br /><pre>'.print_r($data,1).'</pre>';
+		header('Content-type: text/html; charset=utf8');
+		
+		echo  __METHOD__.'<br /><pre>'.print_r($data,1).'</pre>';
+		
+		die;
 	}
 	
 }

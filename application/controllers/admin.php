@@ -21,7 +21,7 @@ class Admin extends CI_Controller {
 	
 	public function books()
 	{
-		$offset = (int)$this->uri->segment(3, 0);
+		$offset = abs((int)$this->uri->segment(3, 0));
 		$action = isset($_GET['act']) ? $_GET['act'] : 'all';
 		$id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 		$userdata = $this->session->userdata;
@@ -35,7 +35,7 @@ class Admin extends CI_Controller {
 				$content = $this->addBook();
 				break;
 			case 'remove':
-				$content = $this->removeBook($id);
+				$content = $this->removeBook($id, $offset);
 				break;
 			case 'all':
 				$content = $this->getBooks($offset);
@@ -47,7 +47,6 @@ class Admin extends CI_Controller {
 				$content = 'No such action';
 				break;
 		}
-			
 			/** TPL DATA **/
 		$data['user'] = $userdata;
 		$data['title'] = 'Admin Area';
@@ -60,7 +59,7 @@ class Admin extends CI_Controller {
 	
 	public function authors()
 	{
-		$offset = (int)$this->uri->segment(3, 0);
+		$offset = abs((int)$this->uri->segment(3, 0));
 		$action = isset($_GET['act']) ? $_GET['act'] : 'all';
 		$id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 		$userdata = $this->session->userdata;
@@ -74,7 +73,7 @@ class Admin extends CI_Controller {
 				$content = $this->addAuthor();
 				break;
 			case 'remove':
-				$content = $this->removeAuthor($id);
+				$content = $this->removeAuthor($id, $offset);
 				break;
 			case 'all':
 				$content = $this->getAuthors($offset);
@@ -98,7 +97,7 @@ class Admin extends CI_Controller {
 	
 	public function cats()
 	{
-		$offset = (int)$this->uri->segment(3, 0);
+		$offset = abs((int)$this->uri->segment(3, 0));
 		$action = isset($_GET['act']) ? $_GET['act'] : 'all';
 		$id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 		$userdata = $this->session->userdata;
@@ -112,7 +111,7 @@ class Admin extends CI_Controller {
 				$content = $this->addCat();
 				break;
 			case 'remove':
-				$content = $this->removeCat($id);
+				$content = $this->removeCat($id, $offset);
 				break;
 			case 'all':
 				$content = $this->getCats($offset);
@@ -145,16 +144,17 @@ class Admin extends CI_Controller {
 	public function test()
 	{
 		header('Content-type: text/html; charset=utf8');
-		echo 'test';
+	
 	}
 	
 	private function getBooks($offset)
 	{
 		$list = $this->model->getBookList($offset, PER_PAGE);
-			
+		$books = $list['result'] ? : $offset == FALSE ? $list['result'] : redirect('admin/books/'.($offset-PER_PAGE));
+		
 			/** TPL DATA **/
 		$data['addTitle'] = ' :: Книги';
-		$data['books'] = $list['result'];
+		$data['books'] = $books;
 		$data['paginator'] = $this->_paginator('admin/books', $list['count'], PER_PAGE);
 			
 			/** TPL LOAD **/
@@ -181,27 +181,40 @@ class Admin extends CI_Controller {
 	{
 		if(isset($_POST['sBtn']))
 		{
-			$data = array_slice($_POST, 1,6);
-				
+			$data = array_slice($_POST, 1, 6);
 			$ins = $this->model->insertBook($data);
+			
 			if($ins){
+				if(!$_FILES['userfile']['error']){
+					preg_match('/^.*?(\.[a-z]+)$/i', $_FILES['userfile']['name'], $ext);
+					$img_name = $ins.$ext[1];
+					$uploaded = $this->upload_img($img_name);
+					
+					if(!$this->thumbnail($uploaded['orig_name'])){
+						exit('Error creating thumbnail with '.$uploaded['orig_name']);
+					} else{ 
+							$this->model->updateBook($ins, array('img' => 'book_'.$ins.'_thumb'.$ext[1]));
+						}
+				} else {
+						exit('File error code: '.$_FILES['userfile']['error']);
+					}
 				redirect('admin/books?act=single&id='.$ins);
 			} else {
-				$content = 'Возникли проблеммы с добавлением книги: '.$data['name'];
-			}
+					$content = 'Возникли проблеммы с добавлением книги: '.$data['title'];
+				}
 		} else {
-			$authors = $this->model->getAllAuthors();
-			$cats = $this->model->getAllCats();
-				
-			/** TPL DATA **/
-			$data['addTitle'] = ' :: Книги :: Добавление';
-			$data['action'] = 'add';
-			$data['authors'] = $authors;
-			$data['cats'] = $cats;
-				
-			/** TPL LOAD **/
-			$content = $this->load->view('admin/layouts/booksAddEdit', $data, TRUE);
-		}
+				$authors = $this->model->getAllAuthors();
+				$cats = $this->model->getAllCats();
+					
+					/** TPL DATA **/
+				$data['addTitle'] = ' :: Книги :: Добавление';
+				$data['action'] = 'add';
+				$data['authors'] = $authors;
+				$data['cats'] = $cats;
+					
+					/** TPL LOAD **/
+				$content = $this->load->view('admin/layouts/booksAddEdit', $data, TRUE);
+			}
 	
 		return $content;
 	}
@@ -214,11 +227,22 @@ class Admin extends CI_Controller {
 			$id = (int)array_shift($data);
 			array_pop($data);
 			$upd = $this->model->updateBook($id, $data);
-			
-			if($upd){
+				
+			if($upd || (!$_FILES['userfile']['error'])){
+				if(!$_FILES['userfile']['error']){
+					preg_match('/^.*?(\.[a-z]+)$/i', $_FILES['userfile']['name'], $ext);
+					$img_name = $id.$ext[1];
+					$uploaded = $this->upload_img($img_name);
+
+					if(!$this->thumbnail($uploaded['orig_name'])){
+						exit('Error creating thumbnail with '.$uploaded['orig_name']);
+					} else {
+							$this->model->updateBook($id, array('img' => 'book_'.$id.'_thumb'.$ext[1]));
+						}
+				} 
 				redirect('admin/books?act=single&id='.$id);
 			} else {
-					$content = 'Изменения для книги <strong>"'.$data['name'].'"</strong> не произведены.';
+					$content = 'Изменения для книги <strong>"'.$data['title'].'"</strong> не произведены.';
 				}
 		} else {
 				$book = $this->model->getBookById($id);
@@ -239,14 +263,13 @@ class Admin extends CI_Controller {
 		return $content;
 	}
 	
-	private function removeBook()
+	private function removeBook($id, $off)
 	{
-		$id = (int)$_GET['id'];
 		if($id){
 			$content = $this->model->deleteBook($id);
 		}
-		if($content){
-			redirect('admin/books');
+		if($content){ 
+				redirect('admin/books/'.$off);
 		} else {
 				$content = 'Возникли проблеммы с удалением книги id: '.$id;
 			}
@@ -256,10 +279,11 @@ class Admin extends CI_Controller {
 	private function getAuthors($offset)
 	{
 		$list = $this->model->getAuthorList($offset, PER_PAGE);
+		$authors = $list['result'] ? : $offset == FALSE ? $list['result'] : redirect('admin/authors/'.($offset-PER_PAGE));
 
 			/** TPL DATA **/
 		$data['addTitle'] = ' :: Авторы';
-		$data['authors'] = $list['result'];
+		$data['authors'] = $authors;
 		$data['paginator'] = $this->_paginator('admin/authors', $list['count'], PER_PAGE);
 			
 			/** TPL LOAD **/
@@ -272,11 +296,11 @@ class Admin extends CI_Controller {
 	{
 		$author[0] = $this->model->getAuthorById($id);
 	
-		/** TPL DATA **/
+			/** TPL DATA **/
 		$data['addTitle'] = ' :: Автор :: '.$author[0]->name;
 		$data['authors'] = $author;
 					
-		/** TPL LOAD **/
+			/** TPL LOAD **/
 		$content = $this->load->view('admin/layouts/authorsContent', $data, TRUE);
 	
 		return $content;
@@ -320,30 +344,29 @@ class Admin extends CI_Controller {
 				redirect('admin/authors?act=single&id='.$id);
 			} else {
 				$content = 'Изменения для автора <strong>"'.$data['name'].'"</strong> не произведены.';
-			}
+				}
 		} else {
-			$author = $this->model->getAuthorById($id);
-		
-				/** TPL DATA **/
-			$data['addTitle'] = ' :: Авторы :: Редактирование :: '.$author->name;
-			$data['action'] = 'edit';
-			$data['author'] = $author;
-				
-				/** TPL LOAD **/
-			$content = $this->load->view('admin/layouts/authorsAddEdit', $data, TRUE);
-		}
+				$author = $this->model->getAuthorById($id);
+			
+					/** TPL DATA **/
+				$data['addTitle'] = ' :: Авторы :: Редактирование :: '.$author->name;
+				$data['action'] = 'edit';
+				$data['author'] = $author;
+					
+					/** TPL LOAD **/
+				$content = $this->load->view('admin/layouts/authorsAddEdit', $data, TRUE);
+			}
 			
 		return $content;
 	}
 	
-	private function removeAuthor($id)
+	private function removeAuthor($id, $off)
 	{
-		$id = (int)$_GET['id'];
 		if($id){
 			$content = $this->model->deleteAuthor($id);
 		}
 		if($content){
-			redirect('admin/authors');
+			redirect('admin/authors/'.$off);
 		} else {
 			$content = 'Возникли проблеммы с удалением автора id: '.$id;
 		}
@@ -353,10 +376,11 @@ class Admin extends CI_Controller {
 	private function getCats($offset)
 	{			
 		$list = $this->model->getCatList($offset, PER_PAGE);
+		$cats = $list['result'] ? : $offset == FALSE ? $list['result'] : redirect('admin/cats/'.($offset-PER_PAGE));
 			
 			/** TPL DATA **/
 		$data['addTitle'] = ' :: Категории';
-		$data['cats'] = $list['result'];
+		$data['cats'] = $cats;
 		$data['paginator'] = $this->_paginator('admin/cats', $list['count'], PER_PAGE);
 			
 			/** TPL LOAD **/
@@ -437,14 +461,13 @@ class Admin extends CI_Controller {
 		return $content;
 	}
 	
-	private function removeCat($id)
+	private function removeCat($id, $off)
 	{
-		$id = (int)$_GET['id'];
 		if($id){
 			$content = $this->model->deleteCat($id);
 		}
 		if($content){
-			redirect('admin/cats');
+			redirect('admin/cats/'.$off);
 		} else {
 			$content = 'Возникли проблеммы с удалением категории id: '.$id;
 		}
@@ -473,9 +496,49 @@ class Admin extends CI_Controller {
 		return $this->pagination->create_links();
 	}
 
+	private function upload_img($filename)
+	{
+		$config['file_name']  = 'book_'.$filename;
+		$config['upload_path'] = './assets/img/upload/';
+		$config['allowed_types'] = 'gif|jpg|jpeg|png';
+		$config['max_size']	= '0';
+		$config['max_width']  = '0';
+		$config['max_height']  = '0';
+		$config['overwrite']  = TRUE;
+		$config['remove_spaces']  = TRUE;
+		
+		$this->load->library('upload', $config);
+		
+		if (!$this->upload->do_upload())
+		{
+			$error = array('error' => $this->upload->display_errors());
+			echo 'ERROR:<br />';
+			$this->debug($error);
+		} else {
+				return $this->upload->data();
+			}
+	}
+	
+	private function thumbnail($img)
+	{
+		$config['image_library'] = 'gd2';
+		$config['source_image'] = './assets/img/upload/'.$img;
+		$config['new_image'] = './assets/img/upload/thumbnails/'.$img;
+		$config['create_thumb'] = TRUE;
+		$config['maintain_ratio'] = TRUE;
+		$config['width'] = 150;
+		$config['height'] = 300;
+		
+		$this->load->library('image_lib', $config);
+		
+		return $this->image_lib->resize();
+	} 
+	
 	private function debug(array $data)
 	{
-		return __METHOD__.'<br /><pre>'.print_r($data,1).'</pre>';
+		header('Content-type: text/html; charset=utf8');
+		
+		exit(__METHOD__.'<br /><pre>'.print_r($data,1).'</pre>');
 	}
 	
 }

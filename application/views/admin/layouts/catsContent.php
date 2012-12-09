@@ -11,8 +11,8 @@
 		<td><?=$val->name?></td>
 		<td><?=$val->parent?:'Нет'?></td>
 		<td><?=$val->active?'Да':'Нет'?></td>
-		<td class="edit"><a href='<?=base_url('admin/cats?act=edit&id='.$val->id)?>'>&nbsp;</a></td>
-		<td class="remove"><a href='<?=base_url('admin/cats?act=remove&id='.$val->id)?>'>&nbsp;</a></td>
+		<td class="edit"><a href='?act=edit&id=<?=$val->id?>'>&nbsp;</a></td>
+		<td class="remove"><a href='?act=remove&id=<?=$val->id?>'>&nbsp;</a></td>
 	</tr>
 	<?php endforeach?>
 </table>

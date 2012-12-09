@@ -9,8 +9,8 @@
 	<tr>
 	    <td><?=$val->name?></td>
 		<td><?=$val->active?'Да':'Нет'?></td>
-	    <td class="edit"><a href="<?=base_url('admin/authors?act=edit&id='.$val->id)?>">&nbsp;</a></td>
-	    <td class="remove"><a href="<?=base_url('admin/authors?act=remove&id='.$val->id)?>">&nbsp;</a></td>
+	    <td class="edit"><a href="?act=edit&id=<?=$val->id?>">&nbsp;</a></td>
+	    <td class="remove"><a href="?act=remove&id=<?=$val->id?>">&nbsp;</a></td>
 	</tr>
 	<?php endforeach?>
 </table>

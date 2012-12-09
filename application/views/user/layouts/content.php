@@ -8,7 +8,11 @@
 	</tr>
 	<?php foreach($books as $book):?>
 	<tr>
-		<td><?=img('assets/img/'.$book->img.'.jpg')?></td>
+		<?php if(file_exists('assets/img/upload/thumbnails/'.$book->img)):?>
+			<td><?=img('assets/img/upload/thumbnails/'.$book->img)?></td>
+		<?php else:?>
+			<td><?=img('assets/img/default_thumb.jpg')?></td>
+		<?php endif?>
 		<td><?=$book->title?></td>
 		<td><?=$book->author?></td>
 		<td class="desc"><?=$book->description?></td>

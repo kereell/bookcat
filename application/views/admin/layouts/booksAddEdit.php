@@ -3,8 +3,8 @@
     	<div class="jqmConfirmTitle">Добавить ...</div>
         <div class="badWords"></div>
         <div class="jqmClose"></div> 
- -->        <form class="addEditFrm" action="<?=base_url('admin/books?act='.$action)?>" method="post">
-        <input type="hidden" name="id" id="id" value="<?=isset($book->id)?$book->id:''?>" />
+ --> 	<form class="addEditFrm" enctype="multipart/form-data" action="<?=base_url('admin/books?act='.$action)?>" method="post">
+	        <input type="hidden" name="id" id="id" value="<?=isset($book->id)?$book->id:''?>" />
             <div>
             	<span class="formelement">Название</span>
             	<input type="text" class="formfield" name="title" id="bookTitle" value="<?=isset($book->title)?$book->title:''?>" autocomplete="off" placeholder="Название" />
@@ -55,7 +55,7 @@
             </div>
             <div>
             	<span class="formelement"></span>
-            	<input type="text" class="formfield" name="img" id="img" value="" autocomplete="off" placeholder="" />
+            	<input type="file" name="userfile" class="img" id="img" size="10" />
             	<div class="error"></div>
             </div>
             <div id="wrbtn">
