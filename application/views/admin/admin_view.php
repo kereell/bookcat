@@ -4,6 +4,8 @@
 		<?=meta('Content-type', 'text/html; charset=utf-8', 'equiv')."\n"?>
 		<?=link_tag('assets/css/admin.css')."\n"?>
 		<!-- <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script> -->
+		<script src="<?=base_url('assets/js/mootools-core-1.4.5-full-compat.js')?>"></script>
+		<script src="<?=base_url('assets/js/mootools-more-1.4.0.1.js')?>"></script>
 		<script src="<?=base_url('assets/js/admin.js')."\n"?>"></script>
 		<title><?=@$title.@$addTitle?></title>    
 	</head>

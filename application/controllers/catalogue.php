@@ -32,10 +32,8 @@ class Catalogue extends CI_Controller {
 		}
 		$cats = $this->cats();
 		$userdata = $this->session->userdata;
-		$breadcrumbs = $this->breadcrumbs($cat);
 			
 			/** TPL DATA **/
-		$data['breadcrumbs'] = $breadcrumbs;
 		$data['user'] = $userdata; 
 		$data['title'] = 'Каталог';
 		$data['categories'] = $cats;
@@ -45,13 +43,36 @@ class Catalogue extends CI_Controller {
 		$this->load->view('user/catalogue_view', $data);
 	}
 	
+	public function rate()
+	{	
+		$item = abs((int)$_POST['id']);
+		$action = $_POST['act'];
+		 
+		switch ($action)
+		{
+			case 'rateUp':
+				
+				$rate = $this->model->rateUp($item);
+				break;
+			
+			case 'rateDown':
+				$rate = $this->model->rateDown($item);
+				break;
+			
+			default:
+				exit('unknown action');
+				break;
+		}
+		
+		echo json_encode($rate);
+	}
+
 	public function test()
 	{
-	
-		header('Content-type: text/html; charset=utf8');
-		echo 'test';
-	
-	}
+		
+		$this->load->view('user/layouts/test');
+			
+	} 
 	
 	private function getBooks($cat, $offset)
 	{ 
@@ -59,43 +80,56 @@ class Catalogue extends CI_Controller {
 		$paginator = $this->_paginator('/catalogue/index/'.$cat, $list['count'], PER_PAGE);
 			
 			/** TPL DATA **/
-		$data['books'] = $list['result'];
+		$data['cont'] = $list['result'];
 		$data['paginator'] = $paginator; 
 		
 			/** TPL LOAD **/
-		$cont = $this->load->view('user/layouts/content', $data, true);
+		$content = $this->load->view('user/layouts/bookContent', $data, true);
 		
-		return $cont;
+		return $content;
 	}
 	
 	private function getBooksByCat($cat, $offset)
 	{
 		$list = $this->model->getBooksByCat($offset, PER_PAGE, $cat);
 		$paginator = $this->_paginator('/catalogue/index/'.$cat, $list['count'], PER_PAGE);
-			
-			/** TPL DATA **/
-		$data['books'] = $list['result'];
+		$breadcrumbs = $this->breadcrumbs($cat);
+		if($list['count'] >0){
+			$cont = $list['result'];
+			$layout = 'bookContent';
+		} else {
+				$cont = $this->model->getCatsByParent($cat);
+//				$this->debugArr($cont);
+				$layout = 'catContent';
+			}
+		/** TPL DATA **/
+		$data['crumbs'] = $breadcrumbs;
+		$data['cont'] = $cont;
 		$data['paginator'] = $paginator;
 			
-			/** TPL LOAD **/
-		$cont = $this->load->view('user/layouts/content', $data, true);
-
-		return $cont;	
+		/** TPL LOAD **/
+		$content = $this->load->view('user/layouts/'.$layout, $data, true);
+		
+		return $content;	
 	}
 	
 	private function searchBooks($cat, $offset, $search)
 	{
 		$list = $this->model->getBooksBySearch($offset, PER_PAGE, $search);
 		$paginator = $this->_paginator('/catalogue/index/'.$cat, $list['count'], PER_PAGE);
-
-//		$this->debug($list);
+		$books = array();
 		
+		foreach($list['result'] as $val)
+		{
+			$books[$this->breadcrumbs($val->id_category)][] = $val;
+		}
+
 			/** TPL DATA **/
-		$data['books'] = $list['result'];
+		$data['books'] = $books;
 		$data['paginator'] = $paginator;
 					
 			/** TPL LOAD **/
-		$cont = $this->load->view('user/layouts/content', $data, true);
+		$cont = $this->load->view('user/layouts/searchContent', $data, true);
 		
 		return $cont;
 	}
@@ -109,9 +143,9 @@ class Catalogue extends CI_Controller {
 	
 	private function breadcrumbs($key)
 	{
-		$menu = $this->cats_model->getCats();
+		$cats = $this->cats_model->getCats();
 	
-		return Categories::buildBreadCrumbs($menu, $key, __CLASS__);
+		return Categories::buildBreadCrumbs($cats, $key, __CLASS__);
 	}
 	
 	private function _paginator($uri, $total, $pp, $nlinks=2)
@@ -137,11 +171,18 @@ class Catalogue extends CI_Controller {
 		return $this->pagination->create_links();
 	}
 	
-	private function debug(array $data)
+	private function debugArr(array $data)
 	{
 		header('Content-type: text/html; charset=utf8');
 	
 		exit(__METHOD__.'<br /><pre>'.print_r($data,1).'</pre>');
+	}
+	
+	private function debugStr($data)
+	{
+		header('Content-type: text/html; charset=utf8');
+	
+		exit(__METHOD__.'<br /><pre>'.$data.'</pre>');
 	}
 	
 }

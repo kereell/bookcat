@@ -276,6 +276,32 @@ class Admin extends CI_Controller {
 		return $content;
 	}
 	
+	public function rate()
+	{
+		$item = abs((int)$_POST['id']);
+		$action = $_POST['act'];
+			
+		switch ($action)
+		{
+			case 'rateUp':
+	
+				$rate = $this->model->rateUp($item);
+				break;
+					
+			case 'rateDown':
+				$rate = $this->model->rateDown($item);
+				break;
+					
+			default:
+				exit('unknown action');
+				break;
+		}
+	
+		echo json_encode($rate);
+	}
+	
+	
+	
 	private function getAuthors($offset)
 	{
 		$list = $this->model->getAuthorList($offset, PER_PAGE);

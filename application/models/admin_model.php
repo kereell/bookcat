@@ -68,6 +68,45 @@ class Admin_model extends CI_Model {
 		
 		return $this->db->affected_rows();
 	}
+
+
+	public function rateUp($id)
+	{
+		$item = (int)$id;
+		$this->db
+		->set('rate', 'rate+1', FALSE)
+		->where('id', $item)
+		->update('bc_books');
+	
+		if($this->db->affected_rows()){
+			$this->db->select('id, rate');
+			$query = $this->db->get_where('bc_books', array('id' => $item));
+			$result = $query->row();
+		} else {
+			$result = FALSE;
+		}
+	
+		return $result;
+	}
+	
+	public function rateDown($id)
+	{
+		$item = (int)$id;
+		$this->db
+		->set('rate', 'rate-1', FALSE)
+		->where('id', $item)
+		->update('bc_books');
+	
+		if($this->db->affected_rows()){
+			$this->db->select('id, rate');
+			$query = $this->db->get_where('bc_books', array('id' => $item));
+			$result = $query->row();
+		} else {
+			$result = FALSE;
+		}
+	
+		return $result;
+	}
 	
 	public function getAuthorList($off, $pp)
 	{
@@ -249,9 +288,7 @@ class Admin_model extends CI_Model {
 	{
 		header('Content-type: text/html; charset=utf8');
 		
-		echo  __METHOD__.'<br /><pre>'.print_r($data,1).'</pre>';
-		
-		die;
+		exit(__METHOD__.'<br /><pre>'.print_r($data,1).'</pre>');
 	}
 	
 }

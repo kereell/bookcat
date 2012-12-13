@@ -28,18 +28,18 @@ class Categories {
 		return $html;
 	}
 	
-	public static function buildBreadCrumbs($menu, $key, $first, $sep=' => ') 
+	public static function buildBreadCrumbs($menu, $key, $first, $sep='') 
 	{
 		$tmp = array();
  		foreach($menu['items'] as $v)
  		{
  			if($v['parent']>0){
-			$tmp[$v['id']] = '<a href="'.base_url('catalogue/index/'.$menu['items'][$v['parent']]['id']).'">'.$menu['items'][$v['parent']]['name'].'</a>'.$sep.'<a href="'.base_url('catalogue/index/'.$v['id']).'">'.$v['name'].'</a>';
+			$tmp[$v['id']] = '<li><a href="'.base_url('catalogue/index/'.$menu['items'][$v['parent']]['id']).'">'.$menu['items'][$v['parent']]['name'].'</a></li>'.$sep.'<li><a href="'.base_url('catalogue/index/'.$v['id']).'">'.$v['name'].'</a></li>';
 			continue;
- 			} $tmp[$v['id']] = '<a href="'.base_url('catalogue/index/'.$v['id']).'">'.$v['name'].'</a>';
+ 			} $tmp[$v['id']] = '<li><a href="'.base_url('catalogue/index/'.$v['id']).'">'.$v['name'].'</a></li>';
 		}
 		
-		$first_element = '<a href="'.base_url('catalogue').'">'.$first.'</a>';
+		$first_element = '<li><a href="'.base_url('catalogue').'">'.$first.'</a></li>';
 		
 		$result = isset($tmp[$key]) ? $first_element.$sep.$tmp[$key] : $first_element;
 		

@@ -7,13 +7,15 @@ class Categories_model extends CI_Model {
 					'parents' => array()
 					);
 	
-	public function __construct() {
+	public function __construct()
+	{
 		
 		parent::__construct();
 		
 	}
 	
-	public function getCats(){
+	public function getCats()
+	{
 		
 		$this->db
 			->select('*')
@@ -21,15 +23,19 @@ class Categories_model extends CI_Model {
 			->where('active = 1');
 
 		$query = $this->db->get();
-		
+		$categories = array();
 		foreach($query->result_array() as $cat)
 		{
-			$this->categories['items'][$cat['id']] = $cat;
-			$this->categories['parents'][$cat['parent']][] = $cat['id'];
+			$categories['items'][$cat['id']] = $cat;
+			$categories['parents'][$cat['parent']][] = $cat['id'];
 		}
 		
-		return $this->categories; 
-		
+		return $categories; 
+			
+	}
+	
+	public function __destruct(){
+//		$this->categories = Null;
 	}
 	
 }

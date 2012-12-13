@@ -283,6 +283,10 @@ margin:0 auto;
 	background-repeat: no-repeat;
 }
 
+.topsort {
+	background-color: #CCC;
+	cursor: pointer;
+}
 
 .tdhead {
 	text-decoration: none; 
@@ -543,7 +547,19 @@ font-size: 13px;
 
 
 div.addEditFrm  {
-	clear:both;
-	
-		
+	clear:both;	
+}
+
+.rate {
+	font-size: xx-large;
+	color: grey;
+}
+
+.rateUp, .rateDown {
+	display: block;
+	cursor: pointer;
+}
+
+.rateUp a, .rateDown a {
+	text-decoration:none;
 }

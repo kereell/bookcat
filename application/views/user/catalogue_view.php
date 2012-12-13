@@ -3,7 +3,10 @@
 	<head>
 		<?=meta('Content-type', 'text/html; charset=utf-8', 'equiv')."\n"?>
 		<?=link_tag('assets/css/user.css')."\n"?>
-		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+		<!-- <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script> -->
+		<!-- <script src="//ajax.googleapis.com/ajax/libs/mootools/1.4.5/mootools-yui-compressed.js"></script> -->
+		<script src="<?=base_url('assets/js/mootools-core-1.4.5-full-compat.js')?>"></script>
+		<script src="<?=base_url('assets/js/mootools-more-1.4.0.1.js')?>"></script>
 		<script src="<?=base_url('assets/js/user.js')?>"></script>
 		<title><?=$title?></title>
 	</head>
@@ -24,8 +27,8 @@
 					<?php else:?>
                     <div id="welcome">Welcome <?=$user['name']?>!</div>
   				<div class="centeralign">
-                <button class="onebutton" role="button" ><a href="<?=base_url('admin')?>">Admin Area</a></button>
-                <button class="onebutton" role="button" ><a href="<?=base_url('admin/logout')?>">Logout</a></button>
+	                <a href="<?=base_url('admin')?>">Admin Area</a>
+	                <a href="<?=base_url('admin/logout')?>">Logout</a>
   				</div>
   				<?php endif?>
   				</div>
@@ -51,8 +54,7 @@
 			    <p>Sidebar</p>
 			  	<!-- end .sidebar1 -->
 		  	</div>
-		  	<div class="ajaxLoad">&nbsp;</div>
-		  	<div class="breadcrumbs"><?=$breadcrumbs?></div>
+		  	<!-- <div class="ajaxLoad">&nbsp;</div> -->
 			<div class="content">
 			<?=$content?>
 			</div>
