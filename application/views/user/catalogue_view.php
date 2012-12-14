@@ -15,13 +15,14 @@
 			
   			<div class="tophead">
   				<div id="sitename"><div id="wrapcenter"><h1><a href="<?=base_url('catalogue')?>">Book<br />Catalogue</a></h1></div></div>
+  				<?=validation_errors()?>
  	 			<div id="logindiv">
 				<?php if(!isset($user['loggedIn'])):?>
-  					<form action="<?=base_url('login')?>" method="post" >
+  					<form name="users" action="<?=base_url('login')?>" method="post" >
 	  					<label for="login">login</label>
 	  					<input type="text" name="login" id="login" placeholder="login" /><br />
-	  					<label for="password">password</label>
-	  					<input type="password" name="passwd" id="password" placeholder="password" /><br />
+	  					<label for="passwd">password</label>
+	  					<input type="password" name="passwd" id="passwd" placeholder="password" /><br />
 	  					<input type="submit" name="lgnBtn" value="sign in" />
   					</form>
 					<?php else:?>
@@ -32,15 +33,13 @@
   				</div>
   				<?php endif?>
   				</div>
-  				
-  				
   			</div>
   			<div id="searchdiv"> 
-  				<form action="<?=base_url('catalogue')?>" method="get" >
+  				<form action="<?=base_url('catalogue/search')?>" method="get" >
 					<table width="100%" border="0">
 						<tr>
 						    <td width="9%" align="right" class="searchtable"><label for="search" >поиск</label>&nbsp;</td>
-						    <td width="83%"><input type="text" name="search" id="search" value="<?=isset($_GET['search'])?$_GET['search']:''?>" /></td>
+						    <td width="83%"><input type="text" name="q" id="search" value="<?=isset($_GET['q'])?$_GET['q']:''?>" /></td>
 						    <td width="8%" align="left" class="searchtable"><input name="" type="submit" value="Найти" />&nbsp;</td>
 					  	</tr>
 					</table>

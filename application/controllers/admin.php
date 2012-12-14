@@ -21,7 +21,7 @@ class Admin extends CI_Controller {
 	
 	public function books()
 	{
-		$offset = abs((int)$this->uri->segment(3, 0));
+		$page = abs((int)$this->uri->segment(3, 1));
 		$action = isset($_GET['act']) ? $_GET['act'] : 'all';
 		$id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 		$userdata = $this->session->userdata;
@@ -35,10 +35,10 @@ class Admin extends CI_Controller {
 				$content = $this->addBook();
 				break;
 			case 'remove':
-				$content = $this->removeBook($id, $offset);
+				$content = $this->removeBook($id, $page);
 				break;
 			case 'all':
-				$content = $this->getBooks($offset);
+				$content = $this->getBooks($page);
 				break;
 			case 'single':
 				$content = $this->getBookById($id);
@@ -59,7 +59,7 @@ class Admin extends CI_Controller {
 	
 	public function authors()
 	{
-		$offset = abs((int)$this->uri->segment(3, 0));
+		$page = abs((int)$this->uri->segment(3, 1));
 		$action = isset($_GET['act']) ? $_GET['act'] : 'all';
 		$id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 		$userdata = $this->session->userdata;
@@ -73,10 +73,10 @@ class Admin extends CI_Controller {
 				$content = $this->addAuthor();
 				break;
 			case 'remove':
-				$content = $this->removeAuthor($id, $offset);
+				$content = $this->removeAuthor($id, $page);
 				break;
 			case 'all':
-				$content = $this->getAuthors($offset);
+				$content = $this->getAuthors($page);
 				break;
 			case 'single':
 				$content = $this->getAuthorById($id);
@@ -97,7 +97,7 @@ class Admin extends CI_Controller {
 	
 	public function cats()
 	{
-		$offset = abs((int)$this->uri->segment(3, 0));
+		$page = abs((int)$this->uri->segment(3, 1));
 		$action = isset($_GET['act']) ? $_GET['act'] : 'all';
 		$id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 		$userdata = $this->session->userdata;
@@ -111,10 +111,10 @@ class Admin extends CI_Controller {
 				$content = $this->addCat();
 				break;
 			case 'remove':
-				$content = $this->removeCat($id, $offset);
+				$content = $this->removeCat($id, $page);
 				break;
 			case 'all':
-				$content = $this->getCats($offset);
+				$content = $this->getCats($page);
 				break;
 			case 'single':
 				$content = $this->getCatById($id);
@@ -147,15 +147,16 @@ class Admin extends CI_Controller {
 	
 	}
 	
-	private function getBooks($offset)
+	private function getBooks($page)
 	{
+		$offset = ($page - 1) * PER_PAGE;
 		$list = $this->model->getBookList($offset, PER_PAGE);
 		$books = $list['result'] ? : $offset == FALSE ? $list['result'] : redirect('admin/books/'.($offset-PER_PAGE));
 		
 			/** TPL DATA **/
 		$data['addTitle'] = ' :: Книги';
 		$data['books'] = $books;
-		$data['paginator'] = $this->_paginator('admin/books', $list['count'], PER_PAGE);
+		$data['paginator'] = $this->paginator('admin/books', $list['count'], PER_PAGE);
 			
 			/** TPL LOAD **/
 		$content = $this->load->view('admin/layouts/booksContent', $data, TRUE);
@@ -297,20 +298,23 @@ class Admin extends CI_Controller {
 				break;
 		}
 	
-		echo json_encode($rate);
+		$this->output
+			->set_content_type('application/json')
+			->set_output(json_encode($rate));
 	}
 	
 	
 	
-	private function getAuthors($offset)
+	private function getAuthors($page)
 	{
+		$offset = ($page - 1) * PER_PAGE;
 		$list = $this->model->getAuthorList($offset, PER_PAGE);
 		$authors = $list['result'] ? : $offset == FALSE ? $list['result'] : redirect('admin/authors/'.($offset-PER_PAGE));
 
 			/** TPL DATA **/
 		$data['addTitle'] = ' :: Авторы';
 		$data['authors'] = $authors;
-		$data['paginator'] = $this->_paginator('admin/authors', $list['count'], PER_PAGE);
+		$data['paginator'] = $this->paginator('admin/authors', $list['count'], PER_PAGE);
 			
 			/** TPL LOAD **/
 		$content = $this->load->view('admin/layouts/authorsContent', $data, TRUE);
@@ -399,15 +403,16 @@ class Admin extends CI_Controller {
 		return $content;
 	}
 	
-	private function getCats($offset)
+	private function getCats($page)
 	{			
+		$offset = ($page - 1) * PER_PAGE;
 		$list = $this->model->getCatList($offset, PER_PAGE);
 		$cats = $list['result'] ? : $offset == FALSE ? $list['result'] : redirect('admin/cats/'.($offset-PER_PAGE));
 			
 			/** TPL DATA **/
 		$data['addTitle'] = ' :: Категории';
 		$data['cats'] = $cats;
-		$data['paginator'] = $this->_paginator('admin/cats', $list['count'], PER_PAGE);
+		$data['paginator'] = $this->paginator('admin/cats', $list['count']);
 			
 			/** TPL LOAD **/
 		$content = $this->load->view('admin/layouts/catsContent', $data, TRUE);
@@ -500,14 +505,15 @@ class Admin extends CI_Controller {
 		return $content;
 	}
 	
-	private function _paginator($uri, $total, $pp, $nlinks=1)
+	private function paginator($uri, $total)
 	{	
 		$this->load->library('pagination');
 		
 		$config['base_url'] = base_url($uri);
 		$config['total_rows'] = $total;
-		$config['per_page'] = $pp;
-		$config['num_links'] = $nlinks;
+		$config['per_page'] = PER_PAGE;
+		$config['num_links'] = 1;
+		$config['use_page_numbers'] = TRUE;
 		
 		$config['next_link'] = 'Next';
 		$config['next_tag_open'] = '<span class="next">&nbsp;';

@@ -1,5 +1,4 @@
 <?php
-
 class Catalogue extends CI_Controller {
 	
 	public function __construct()
@@ -14,33 +13,7 @@ class Catalogue extends CI_Controller {
 	
 	public function index()
 	{		
-		$cat = abs((int)$this->uri->segment(3, 0));
-		$offset = abs((int)$this->uri->segment(4, 0));
-		
-		switch (TRUE){
-			case $cat > 0:
-				$content = $this->getBooksByCat($cat, $offset);
-				break;
-			
-			case isset($_GET['search']):
-				$content = $this->searchBooks($cat, $offset, $_GET['search']);
-				break;
-			
-			default:
-				$content = $this->getBooks($cat, $offset);
-				break;
-		}
-		$cats = $this->cats();
-		$userdata = $this->session->userdata;
-			
-			/** TPL DATA **/
-		$data['user'] = $userdata; 
-		$data['title'] = 'Каталог';
-		$data['categories'] = $cats;
-		$data['content'] = $content;
-			
-			/** TPL LOAD **/
-		$this->load->view('user/catalogue_view', $data);
+		redirect('catalogue/listing');
 	}
 	
 	public function rate()
@@ -63,8 +36,10 @@ class Catalogue extends CI_Controller {
 				exit('unknown action');
 				break;
 		}
-		
-		echo json_encode($rate);
+
+		$this->output
+			->set_content_type('application/json')
+			->set_output(json_encode($rate));
 	}
 
 	public function test()
@@ -74,10 +49,60 @@ class Catalogue extends CI_Controller {
 			
 	} 
 	
-	private function getBooks($cat, $offset)
-	{ 
+	public function listing()
+	{
+		$content = $this->getBooks();
+		$cats = $this->cats();
+		$userdata = $this->session->userdata;
+			
+			/** TPL DATA **/
+		$data['user'] = $userdata;
+		$data['title'] = 'Каталог';
+		$data['categories'] = $cats;
+		$data['content'] = $content;
+			
+			/** TPL LOAD **/
+		$this->load->view('user/catalogue_view', $data);
+	}
+
+	public function categories()
+	{
+		$content = $this->getBooksByCat();
+		$cats = $this->cats();
+		$userdata = $this->session->userdata;
+			
+		/** TPL DATA **/
+		$data['user'] = $userdata;
+		$data['title'] = 'Каталог';
+		$data['categories'] = $cats;
+		$data['content'] = $content;
+			
+		/** TPL LOAD **/
+		$this->load->view('user/catalogue_view', $data);
+	}
+
+	public function search()
+	{
+		$content = $this->searchBooks();		
+		$cats = $this->cats();
+		$userdata = $this->session->userdata;
+			
+		/** TPL DATA **/
+		$data['user'] = $userdata;
+		$data['title'] = 'Каталог';
+		$data['categories'] = $cats;
+		$data['content'] = $content;
+			
+		/** TPL LOAD **/
+		$this->load->view('user/catalogue_view', $data);
+	}
+	
+	private function getBooks()
+	{
+		$page = abs((int)$this->uri->segment(3, 1));
+		$offset = ($page - 1) * PER_PAGE;
 		$list = $this->model->getBooks($offset, PER_PAGE);
-		$paginator = $this->_paginator('/catalogue/index/'.$cat, $list['count'], PER_PAGE);
+		$paginator = $this->paginator('/catalogue/listing/', $list['count'], 3);
 			
 			/** TPL DATA **/
 		$data['cont'] = $list['result'];
@@ -89,17 +114,21 @@ class Catalogue extends CI_Controller {
 		return $content;
 	}
 	
-	private function getBooksByCat($cat, $offset)
+	private function getBooksByCat()
 	{
+		$cat = abs((int)$this->uri->segment(3, 0));
+		$page = abs((int)$this->uri->segment(4, 1));
+		$offset = ($page - 1) * PER_PAGE;
+		
 		$list = $this->model->getBooksByCat($offset, PER_PAGE, $cat);
-		$paginator = $this->_paginator('/catalogue/index/'.$cat, $list['count'], PER_PAGE);
+		$paginator = $this->paginator('/catalogue/categories/'.$cat, $list['count'], 4);
 		$breadcrumbs = $this->breadcrumbs($cat);
+		
 		if($list['count'] >0){
 			$cont = $list['result'];
 			$layout = 'bookContent';
 		} else {
 				$cont = $this->model->getCatsByParent($cat);
-//				$this->debugArr($cont);
 				$layout = 'catContent';
 			}
 		/** TPL DATA **/
@@ -113,10 +142,15 @@ class Catalogue extends CI_Controller {
 		return $content;	
 	}
 	
-	private function searchBooks($cat, $offset, $search)
+	private function searchBooks()
 	{
-		$list = $this->model->getBooksBySearch($offset, PER_PAGE, $search);
-		$paginator = $this->_paginator('/catalogue/index/'.$cat, $list['count'], PER_PAGE);
+		//TODO SANATIZE GET
+		$search = $_GET['q'];
+		$page = abs((int)$this->uri->segment(3, 1));
+		$offset = ($page - 1) * PER_PAGE;
+		
+		$list = $this->model->getBooksBySearch($offset, 2, $search);
+		$paginator = $this->paginator('/catalogue/search/', $list['count'], 3);
 		$books = array();
 		
 		foreach($list['result'] as $val)
@@ -148,15 +182,16 @@ class Catalogue extends CI_Controller {
 		return Categories::buildBreadCrumbs($cats, $key, __CLASS__);
 	}
 	
-	private function _paginator($uri, $total, $pp, $nlinks=2)
+	private function paginator($uri, $total, $uri_segment)
 	{
 		$this->load->library('pagination');
 	
 		$config['base_url'] = base_url($uri);
-		$config['uri_segment'] = 4;
+		$config['uri_segment'] = $uri_segment;
 		$config['total_rows'] = $total;
-		$config['per_page'] = $pp;
-		$config['num_links'] = $nlinks;
+		$config['per_page'] = PER_PAGE;
+		$config['num_links'] = 1;
+		$config['use_page_numbers'] = TRUE;
 	
 		$config['next_link'] = 'Next';
 		$config['next_tag_open'] = '<span class="next">&nbsp;';
