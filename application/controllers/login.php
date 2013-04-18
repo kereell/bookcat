@@ -27,7 +27,7 @@ class Login extends CI_Controller {
 		return Hash::create($passwd);
 	}
 	
-	public function _check_auth($passwd, $login)
+	public function _auth($passwd, $login)
 	{
 		$user = $this->model->checkUser($_POST[$login], $passwd);
 		

@@ -3,7 +3,8 @@
     	<div class="jqmConfirmTitle">Добавить ...</div>
         <div class="badWords"></div>
         <div class="jqmClose"></div> 
- --> 	<form class="addEditFrm" enctype="multipart/form-data" action="<?=base_url('admin/books?act='.$action)?>" method="post">
+ --> 	<div class="inputErr"><?=validation_errors()?></div>
+ 		<form class="addEditFrm" enctype="multipart/form-data" action="<?=base_url('admin/books?act='.$action)?>" method="post">
 	        <input type="hidden" name="id" id="id" value="<?=isset($book->id)?$book->id:''?>" />
             <div>
             	<span class="formelement">Название</span>
@@ -12,7 +13,8 @@
             </div> 
             <div>
             	<span class="formelement">Описание</span>
-            	<input type="text" class="formfield" name="description" id="bookDescription" value="<?=isset($book->description)?$book->description:''?>" autocomplete="off" placeholder="Описание" />
+	            	<textarea rows="5" cols="23"  class="formfield" name="description" id="bookDescription" value="<?=isset($book->description)?$book->description:''?>" placeholder="Описание">
+	            	</textarea>
             	<div class="error"></div>
             </div>
             <div>

@@ -180,7 +180,8 @@ class Admin extends CI_Controller {
 	
 	private function addBook()
 	{
-		if(isset($_POST['sBtn']))
+		$this->load->library('form_validation');
+		if($this->form_validation->run('addEditBook') == TRUE) //isset($_POST['sBtn'])
 		{
 			$data = array_slice($_POST, 1, 6);
 			$ins = $this->model->insertBook($data);
@@ -302,9 +303,7 @@ class Admin extends CI_Controller {
 			->set_content_type('application/json')
 			->set_output(json_encode($rate));
 	}
-	
-	
-	
+			
 	private function getAuthors($page)
 	{
 		$offset = ($page - 1) * PER_PAGE;

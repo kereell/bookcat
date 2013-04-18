@@ -506,14 +506,14 @@ margin: 10px 3px 0;
 display: block;
 text-indent: -2000px;
 overflow: hidden;
-background: url(../img/error.png) no-repeat;
+/** background: url(../img/error.png) no-repeat;**/
 }
  
 .addEditFrm div {
 margin-bottom:3px;	
 }
 
-.addEditFrm span, .addEditFrm input {
+.addEditFrm span, .addEditFrm input, .addEditFrm select {
 float: left;
 display: table-cell;
 width: 215px;
@@ -523,11 +523,9 @@ font-family: Verdana;
 font-size: 13px;
 }
 
-.addEditFrm select {
+.addEditFrm textarea {
 	float: left;
-	width:215px;
 	display: table-cell;
-	height:20px;
 	margin: 7px 5px;
 	font-family: Verdana;
 	font-size: 13px;

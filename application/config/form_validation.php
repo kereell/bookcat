@@ -10,29 +10,39 @@ $config = array(
 				array(
 						'field' => 'passwd',
 						'label' => 'Password',
-						'rules' => 'required|callback__hash_create|callback__check_auth[login]'
+						'rules' => 'required|callback__hash_create|callback__auth[login]'
 				)
 		),
 		'addEditBook' => array(
 				array(
-						'field' => 'emailaddress',
-						'label' => 'EmailAddress',
-						'rules' => 'required|valid_email'
-				),
-				array(
-						'field' => 'name',
-						'label' => 'Name',
-						'rules' => 'required|alpha'
-				),
-				array(
 						'field' => 'title',
-						'label' => 'Title',
-						'rules' => 'required'
+						'label' => 'Название',
+						'rules' => 'required|trim|xss_clean|htmlspecialchars'
 				),
 				array(
-						'field' => 'message',
-						'label' => 'MessageBody',
-						'rules' => 'required'
+						'field' => 'description',
+						'label' => 'Описание',
+						'rules' => 'required|trim|xss_clean|htmlspecialchars'
+				),
+				array(
+						'field' => 'rate',
+						'label' => 'Рейтинг',
+						'rules' => 'required|numeric'
+				),
+				array(
+						'field' => 'id_author',
+						'label' => 'Автор',
+						'rules' => 'required|numeric'
+				),
+				array(
+						'field' => 'id_category',
+						'label' => 'Категория',
+						'rules' => 'required|numeric'
+				),
+				array(
+						'field' => 'active',
+						'label' => 'Отображение на сайте',
+						'rules' => 'required|numeric'
 				)
 		)
 );

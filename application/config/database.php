@@ -48,10 +48,14 @@
 $active_group = 'default';
 $active_record = TRUE;
 
+//$db['default']['hostname'] = get_cfg_var('zend_developer_cloud.db.host'); //'localhost';
+//$db['default']['username'] = get_cfg_var('zend_developer_cloud.db.username'); //'kereell';
+//$db['default']['password'] = get_cfg_var('zend_developer_cloud.db.password');//'kirillius';
+//$db['default']['database'] = get_cfg_var('zend_developer_cloud.db.name'); //'kereell';
 $db['default']['hostname'] = 'localhost';
-$db['default']['username'] = 'kereell';
-$db['default']['password'] = 'kirillius';
-$db['default']['database'] = 'kereell';
+$db['default']['username'] = 'root';
+$db['default']['password'] = 'olorin';
+$db['default']['database'] = 'bookcat';
 $db['default']['dbdriver'] = 'mysql';
 $db['default']['dbprefix'] = '';
 $db['default']['pconnect'] = TRUE;
